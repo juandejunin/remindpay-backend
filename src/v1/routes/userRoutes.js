@@ -1,9 +1,13 @@
 const express = require('express')
-const userController = require('../../controllers/userController')
+const {registerUser,loginUser, verifyEmail} = require('../../controllers/userController')
 
 const router = express.Router()
 
-router.route('/register').post(userController.registroUsuario)
+router.route('/register').post(registerUser)
+router.route('/login').post(loginUser)
+router.route('/user/verify/:cryptoToken').get(verifyEmail)
+
+
 function hola (req, res) {
   res.send('hola gente')
 }
