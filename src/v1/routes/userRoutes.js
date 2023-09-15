@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.route('/register').post(userController.registroUsuario)
 function hola (req, res) {
-  res.send('hola bola')
+  res.send('hola gente')
 }
 router.get('/user', hola)
 

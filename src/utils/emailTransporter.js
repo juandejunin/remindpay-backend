@@ -8,12 +8,12 @@ const Transporter = nodemailer.createTransport({
   }
 })
 
-const sendVerificationMail = async (user, host) => {
+const sendVerificationMail = async (user, host) => { 
   try {
     const mailOptions = ({
       from: process.env.EMAIL_ACCOUNT,
       to: user.email,
-      subject: 'Account Verification Link',
+      subject: 'Account Verification Link',      
       html: `<h3>Hello, ${user.username} Please, verify your email by clicking  <a href="http://${host}/api/user/verify/${user.security?.cryptoToken}">here</a></h3> `
     })
 
