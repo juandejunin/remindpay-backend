@@ -1,4 +1,4 @@
-# remindpay-backend
+# Remindpay-backend
 
 Este repositorio contiene el código fuente del backend de RemindPay, una aplicación que hace uso de diversas tecnologías para recordatorios y pagos. A continuación, se describen los pasos para construir la imagen de Docker y ejecutar la aplicación.
 
