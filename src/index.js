@@ -21,7 +21,8 @@ const userRoutes = require('./v1/routes/userRoutes')
 const app = express()
 
 // Obtiene el puerto del archivo .env.
-const PORT = process.env.PORT
+const port = process.env.PORT
+console.log(port)
 
 // Configura middlewares globales para la aplicación Express.
 app.use(cors()) // Habilita el soporte CORS (Cross-Origin Resource Sharing).
@@ -38,6 +39,6 @@ app.use('/api', userRoutes) // Rutas relacionadas con usuarios.
 // Configura middleware para manejar errores.
 
 // Inicia el servidor Express en el puerto definido en PORT.
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`)
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`)
 })
