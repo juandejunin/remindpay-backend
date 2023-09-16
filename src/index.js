@@ -14,6 +14,7 @@ const helmet = require('helmet')
 
 // Importa las rutas para diferentes recursos.
 const userRoutes = require('./v1/routes/userRoutes')
+const settingRoutes = require('./v1/routes/settingRoutes')
 
 // Importa middleware personalizado para manejar rutas desconocidas y errores.
 
@@ -31,7 +32,7 @@ app.use(helmet()) // Configura encabezados de seguridad HTTP con Helmet.
 
 // Define rutas para diferentes recursos utilizando las rutas importadas.
 app.use('/api/auth', userRoutes) // Rutas relacionadas con usuarios.
-
+app.use('/api/set', settingRoutes)
 // Configura una ruta para la documentación de la API utilizando Swagger.
 
 // Configura middleware para manejar rutas desconocidas.

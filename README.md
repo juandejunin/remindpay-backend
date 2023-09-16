@@ -94,3 +94,31 @@ localhost:8000/api/auth/login
     "errorMsg": null
 }
 ```
+
+### Configuracion de las notificaciones de pago (Setting)
+
+Este endpoint se utiliza temporalmente para llevar a cabo pruebas de autenticación.
+
+#### URL del Endpoint (Metodo GET)
+
+```
+localhost:8000/api/set
+```
+Para acceder a este endpoint, debes proporcionar los siguientes datos en la cabecera:
+
+Key:
+```
+Authorization
+```
+Value (el token obtenido al iniciar sesión). Por ejemplo:
+```
+beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTQ4NDk1MzksImV4cCI6MTY5NDg5MjczOX0.9W0BcO8pdxHfmVMOZL92fHTkX6n8Sb02_z3oo9ocSwM
+```
+
+#### Respuesta en caso de éxito:
+
+Una cadena de texto:
+```
+Hola gente desde setting, si estas aca es porque pudiste autenticarte exitosamente
+```
+
