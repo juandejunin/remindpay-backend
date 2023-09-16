@@ -2,9 +2,18 @@
 
 Este repositorio contiene el código fuente del backend de RemindPay, una aplicación que hace uso de diversas tecnologías para recordatorios y pagos. A continuación, se describen los pasos para construir la imagen de Docker y ejecutar la aplicación.
 
+## Clonar repositorio
+
+Para comenzar, debes clonar este repositorio en tu máquina local. Puedes hacerlo fácilmente ejecutando el siguiente comando en tu terminal:
+
+```
+git clone https://github.com/juandejunin/remindpay-backend.git
+```
+
+
 ## Construcción de la Imagen Docker
 
-Para iniciar, sigue estos pasos para construir la imagen de Docker:
+A continuación, sigue estos pasos para construir la imagen de Docker. Asegúrate de verificar que te encuentras en la carpeta 'remindpay-backend' antes de proceder.
 
 ```
 docker build -t remindpay-back .
