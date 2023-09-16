@@ -10,9 +10,15 @@ const signToken = (userToken) => {
 const verifyToken = (request) => {
   const authorization = request.headers.authorization?.toLowerCase().startsWith('bearer ')
   const token = authorization ? request.headers.authorization?.split(' ')[1] : null
-  const payload = validateToken(token)
-  request.userName = payload.name
-  request.userId = payload.id
+  if (token) {
+    try {
+      const payload = validateToken(token)
+      request.userPayload = payload // Devuelve el payload completo
+    } catch (error) {
+      // Manejar errores de verificación de token
+      console.error('Error de verificación de token:', error)
+    }
+  }
 }
 
 const validateToken = (token) => {
