@@ -165,7 +165,6 @@ const verifyEmail = async (req) => {
     { new: true } // Opciones para devolver el documento actualizado
   );
   
-
   // Paso 6: Preparar los datos de respuesta con la información actualizada del usuario
   data = {
     email: userUpdated.email,
