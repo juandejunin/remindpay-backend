@@ -1,5 +1,8 @@
-#Define la imagen base
-FROM node:18
+# Define el argumento para la versión de Node.js
+ARG NODE_VERSION=18.17.1
+
+# Usa el argumento para especificar la versión de Node.js
+FROM node:${NODE_VERSION}
 
 #Definir el directorio de trabajo
 WORKDIR /home/app

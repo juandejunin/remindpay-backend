@@ -16,7 +16,9 @@ git clone https://github.com/juandejunin/remindpay-backend.git
 A continuación, sigue estos pasos para construir la imagen de Docker. Asegúrate de verificar que te encuentras en la carpeta 'remindpay-backend' antes de proceder.
 
 ```
-docker build -t remindpay-back .
+
+docker build -t remindpay-back --build-arg NODE_VERSION=18.17.1 .
+
 ```
 
 ## Ejecución de la Aplicación en un Contenedor
