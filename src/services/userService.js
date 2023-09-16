@@ -29,6 +29,10 @@ const registerUser = async (req) => {
   // Extrae los campos del cuerpo de la solicitud.
   const { username, email, password } = req.body
 
+  if (!username || !email || !password) {
+    return createResponse(false, null, 'The username, email and password fields are required', 401);
+  }
+
   // Verifica si ya existe un usuario con el mismo nombre de usuario o correo electrónico.
   const usernameExists = await User.findOne({ username })
   const emailExists = await User.findOne({ email })

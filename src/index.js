@@ -30,7 +30,7 @@ app.use(express.json()) // Permite el análisis de solicitudes JSON.
 app.use(helmet()) // Configura encabezados de seguridad HTTP con Helmet.
 
 // Define rutas para diferentes recursos utilizando las rutas importadas.
-app.use('/api', userRoutes) // Rutas relacionadas con usuarios.
+app.use('/api/auth', userRoutes) // Rutas relacionadas con usuarios.
 
 // Configura una ruta para la documentación de la API utilizando Swagger.
 
