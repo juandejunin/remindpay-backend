@@ -1,20 +1,18 @@
 
 const express = require('express')
 
-const tokenValidator = require('../../middlewares/tokenValidator')
+const {validateJwt, handleErrorAuthentication} = require('../../middlewares/tokenValidator')
 
 
 const routerSetting = express.Router()
 
 // routerSetting.route('/register').post(registerUser)
 
-
-
-function hola (req, res) {
-  res.send('Hola gente desde setting, si estas aca es porque pudiste autenticarte exitosamente')
+const prueba = async (req, res) => {
+  
+  return res.send('Si llegaste  hasta aca es porque pudiste autenticarte exitosamente')
 }
-routerSetting.get('/',tokenValidator, hola )
+
+routerSetting.get('/seting', validateJwt,handleErrorAuthentication, prueba )
 
 module.exports = routerSetting
-
-
