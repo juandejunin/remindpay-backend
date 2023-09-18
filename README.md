@@ -113,7 +113,7 @@ Este endpoint se utiliza temporalmente para llevar a cabo pruebas de autenticaci
 #### URL del Endpoint (Metodo GET)
 
 ```
-localhost:8000/api/set
+localhost:8000/api/set/seting
 ```
 Para acceder a este endpoint, debes proporcionar los siguientes datos en la cabecera:
 
@@ -130,6 +130,6 @@ beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTQ4NDk1MzksImV4cCI6MTY5N
 
 Una cadena de texto:
 ```
-Hola gente desde setting, si estas aca es porque pudiste autenticarte exitosamente
+Si llegaste hasta aca es porque pudiste autenticarte exitosamente
 ```
 
