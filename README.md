@@ -10,18 +10,25 @@ Para comenzar, debes clonar este repositorio en tu máquina local. Puedes hacerl
 git clone https://github.com/juandejunin/remindpay-backend.git
 ```
 
+## Opción levantar el repositorio en local
 
-## Construcción de la Imagen Docker
+#### 1- Crea en la raíz del repositorio un archivo .env basado en el ejemplo proporcionado en .env-example.txt
+
+#### 2- Ejecutar el comando
+
+```
+npm i
+```
+
+## Opción construcción de la Imagen Docker
 
 A continuación, sigue estos pasos para construir la imagen de Docker. Asegúrate de verificar que te encuentras en la carpeta 'remindpay-backend' antes de proceder.
 
 ```
-
 docker build -t remindpay-back --build-arg NODE_VERSION=18.17.1 .
-
 ```
 
-## Ejecución de la Aplicación en un Contenedor
+### Ejecución de la Aplicación en un Contenedor
 
 Una vez que la imagen de Docker se haya construido con éxito, puedes ejecutar la aplicación en un contenedor. Asegúrate de tener las siguientes variables de entorno previamente configuradas:
 
@@ -32,12 +39,14 @@ Una vez que la imagen de Docker se haya construido con éxito, puedes ejecutar l
 A continuación, utiliza el siguiente comando para levantar el contenedor:
 
 ```
-docker run -p 8000:8000  -e PORT=8000 -e URL_MONGO='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' -e EMAIL_ACCOUNT="<jxxxxxxxxxx@gmail.com>" -e EMAIL_PASSWORD="xxxx xxxx xxxx xxxx"  remindpay-back
+docker run -p 8000:8000 --name remind2 -e PORT=8000 -e URL_MONGO='mongodb+srv://<usuario>:<contraseá>@<link-de-mongo>' 
+-e JWT_SECRET_KEY='clavesecreta'  -e EMAIL_ACCOUNT="<usuario-de-gmail>@gmail.com" -e EMAIL_PASSWORD="<password-de-aplicacion-de-gmail>"
+ -e URL_SIGNIN='<link-de-redireccion-inicio>'  remindpay-back
 ```
 
 Si todo se ha configurado correctamente y el contenedor se ha iniciado sin problemas, la aplicación estará funcionando en el puerto 8000.
 
-¡Listo! Ahora puedes acceder a la aplicación en http://localhost:8000.
+¡Listo! Ahora puedes acceder a la aplicación en <http://localhost:8000>.
 
 ## Enpoints
 
@@ -61,7 +70,7 @@ localhost:8000/api/auth/register
 }
 ```
 
-#### Respuesta en caso de éxito:
+#### Respuesta en caso de éxito
 
 ```
 {
@@ -94,7 +103,7 @@ localhost:8000/api/auth/login
 }
 ```
 
-#### Respuesta en caso de éxito:
+#### Respuesta en caso de éxito
 
 ```
 {
@@ -115,21 +124,25 @@ Este endpoint se utiliza temporalmente para llevar a cabo pruebas de autenticaci
 ```
 localhost:8000/api/set/seting
 ```
+
 Para acceder a este endpoint, debes proporcionar los siguientes datos en la cabecera:
 
 Key:
+
 ```
 Authorization
 ```
+
 Value (el token obtenido al iniciar sesión). Por ejemplo:
+
 ```
 beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTQ4NDk1MzksImV4cCI6MTY5NDg5MjczOX0.9W0BcO8pdxHfmVMOZL92fHTkX6n8Sb02_z3oo9ocSwM
 ```
 
-#### Respuesta en caso de éxito:
+#### Respuesta en caso de éxito
 
 Una cadena de texto:
+
 ```
 Si llegaste hasta aca es porque pudiste autenticarte exitosamente
 ```
-
