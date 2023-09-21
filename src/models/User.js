@@ -25,9 +25,9 @@ const userSchema = new Schema({
     cryptoToken: String,
     restorePassword: Boolean
   },
-  setting: [{
+  reminder: [{
     type: Schema.Types.ObjectId,
-    ref: 'Setting'
+    ref: 'Reminder'
   }],
   Rol: [{
     type: Schema.Types.ObjectId,
@@ -43,7 +43,7 @@ const userSchema = new Schema({
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject.password
-    delete returnedObject._id
+    // delete returnedObject._id
   }
 })
 

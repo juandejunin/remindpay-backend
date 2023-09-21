@@ -8,13 +8,16 @@ require('./database/db').connectDB()
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
+
 // const swaggerUI = require('swagger-ui-express')
 
 // Importa la documentación de API desde './docs'.
 
 // Importa las rutas para diferentes recursos.
 const userRoutes = require('./v1/routes/userRoutes')
-const settingRoutes = require('./v1/routes/settingRoutes')
+
+const reminderRoutes = require('./v1/routes/reminderRoutes')
+
 
 // Importa middleware personalizado para manejar rutas desconocidas y errores.
 
@@ -23,16 +26,19 @@ const app = express()
 
 // Obtiene el puerto del archivo .env.
 const port = process.env.PORT
-console.log(port)
+
 
 // Configura middlewares globales para la aplicación Express.
+app.use(express.urlencoded({extended: true}))
 app.use(cors()) // Habilita el soporte CORS (Cross-Origin Resource Sharing).
 app.use(express.json()) // Permite el análisis de solicitudes JSON.
 app.use(helmet()) // Configura encabezados de seguridad HTTP con Helmet.
 
 // Define rutas para diferentes recursos utilizando las rutas importadas.
 app.use('/api/auth', userRoutes) // Rutas relacionadas con usuarios.
-app.use('/api/set', settingRoutes)
+
+app.use('/api/reminder',reminderRoutes)
+
 // Configura una ruta para la documentación de la API utilizando Swagger.
 
 // Configura middleware para manejar rutas desconocidas.
