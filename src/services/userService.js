@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/User')
 const { createResponse } = require('../utils/responseGenerator')
 const { signToken } = require('../utils/jwtOperations')
+const { createToken } = require('../utils/jwt')
 const { initUserSeguridad, verificarUser, buildForgotPassword, passwordReset } = require('../utils/verificationManager')
 const { sendVerificationMail, sendForgotPasswordMail, sendChangedPasswordMail } = require('../utils/emailTransporter')
 const buildHostName = require('../utils/hostManager')
@@ -17,7 +18,7 @@ const SALT_ROUNDS = 10
 const MSG_NO_VERIFICADO = 'You must verify the account. Check your mail'
 
 // Función para registrar un usuario.
-const registerUser = async (req) => {
+const registerUser = async (req, res) => {
   let data = null
 
   // Valida los datos del usuario utilizando las reglas definidas en validationResult.
@@ -70,70 +71,120 @@ const registerUser = async (req) => {
  * @returns {Object} - Objeto de respuesta que indica el resultado de la operación.
  */
 
-const loginUser = async (req) => {
-  // Paso 1: Validar los errores de la solicitud
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return createResponse(false, null, errors.array(), 400);
+const loginUser = (req, res) => {
+  // Recoger parametros que lleguen en la peticion
+  let params = req.body
+
+  if (!params.email || !params.password) {
+      return res.status(404).send({
+          status: "error",
+          message: "faltan datos por enviar"
+      })
   }
 
-  // Paso 2: Obtener el email y la contraseña de la solicitud
-  const { email, password } = req.body;
+  //BUscar en la base de datos
+  User.findOne({ email: params.email })
+      // .select({ "password": 0 })
+      .exec((error, user) => {
+          if (error || !user) return res.status(404).send({
+              status: "error",
+              message: "No se encuentra el usuario"
+          })
+
+          //Comprobar la contraseña
+          let pwd = bcrypt.compareSync(params.password, user.password)
+
+          if (!pwd) {
+              return res.status(400).send({
+                  status: "error",
+                  message: "No te identificaste correctamente"
+              })
+          }
+
+          //Devolver token
+          const token = jwt.createToken(user)
+
+          //Devolver datos de usuario
+          return res.status(200).send({
+              status: "success",
+              message: "accion de login",
+              user: {
+                  id: user._id,
+                  name: user.name,
+                  nick: user.nick
+              },
+              token
+          })
+
+      })
+}
+
+
+// const loginUser = async (req) => {
+//   // Paso 1: Validar los errores de la solicitud
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return createResponse(false, null, errors.array(), 400);
+//   }
+
+//   // Paso 2: Obtener el email y la contraseña de la solicitud
+//   const { email, password } = req.body;
   
   
-  // Paso 3: Buscar al usuario en la base de datos por su email
-  const userDB = await User.find({ email });
+//   // Paso 3: Buscar al usuario en la base de datos por su email
+//   const userSearched= await User.find({ email });
+//   userDB = userSearched[0]
   
 
-  if (!password || !userDB) {
-    return createResponse(false, null, 'Invalid email or password', 401);
-  }
 
-  // Paso 4: Verificar si se encontró un usuario en la base de datos
-  if (userDB) {
-    // Paso 5: Comprobar si se solicitó un cambio de contraseña para el usuario
-    if (userDB.security?.restorePassword) {
-      return createResponse(
-        false,
-        null,
-        'A password change has been requested and you must complete the process',
-        400
-      );
-    }
+//   if (!password || !email) {
+//     return createResponse(false, null, 'Invalid email or password', 401);
+//   }
 
-    // Paso 6: Comparar la contraseña proporcionada con la contraseña almacenada
-    if (!bcrypt.compareSync(password, userDB[0].password)) {
-      return createResponse(false, null, 'Invalid email or password', 401);
-    }
+//   // Paso 4: Verificar si se encontró un usuario en la base de datos
+//   if (userDB) {
+//     // Paso 5: Comprobar si se solicitó un cambio de contraseña para el usuario
+//     if (userDB.security?.restorePassword) {
+//       return createResponse(
+//         false,
+//         null,
+//         'A password change has been requested and you must complete the process',
+//         400
+//       );
+//     }
 
-    // Paso 7: Verificar si la cuenta del usuario está verificada
-    if (!userDB[0].security?.verified) {
-      return createResponse(false, null, MSG_NO_VERIFICADO, 400);
-    }
+//     // Paso 6: Comparar la contraseña proporcionada con la contraseña almacenada
+//     if (!bcrypt.compareSync(password, userDB.password)) {
+//       return createResponse(false, null, 'Invalid email or password', 401);
+//     }
 
-    // Paso 8: Generar un token de autenticación para el usuario
-    const userToken = {
-      id: userDB._id,
-      name: userDB.name,
-    };
-    const token = signToken(userToken);
+//     // Paso 7: Verificar si la cuenta del usuario está verificada
+//     if (!userDB.security?.verified) {
+//       return createResponse(false, null, MSG_NO_VERIFICADO, 400);
+//     }
 
-    // Paso 9: Preparar los datos de respuesta
-    const data = {
-      id: userDB._id,
-      name: userDB.name,
-      username: userDB.username,
-      token,
-      
-    };
+//     // Paso 8: Generar un token de autenticación para el usuario
+//     const userToken = {
+//       id: userDB._id,      
+//       name: userDB.username,
+//     };
+    
+//     const token = createToken(userToken);
 
-    // Paso 10: Devolver una respuesta exitosa con los datos del usuario
-    return createResponse(true, data, null, 200);
-  }
+//     // Paso 9: Preparar los datos de respuesta
+//     const data = {
+//       id: userDB._id,
+//       username: userDB.username,
+//       token,      
+//     };
 
-  // Paso 11: Devolver una respuesta de error si no se encontró un usuario en la base de datos
-  return createResponse(false, null, 'Invalid email or password', 401);
-};
+//     // Paso 10: Devolver una respuesta exitosa con los datos del usuario
+//     return createResponse(true, data, null, 200);
+//   }
+
+//   // Paso 11: Devolver una respuesta de error si no se encontró un usuario en la base de datos
+//   return createResponse(false, null, 'Invalid email or password', 401);
+// };
 
 /**
  * Función para verificar la dirección de correo electrónico de un usuario mediante un token criptográfico.
