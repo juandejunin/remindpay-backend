@@ -5,7 +5,7 @@ const ReminderSchema = Schema({
         type: Schema.ObjectId,
         ref: "User"
     },
-    name: {
+    remindername: {
         type: String,
         required: true
     },
