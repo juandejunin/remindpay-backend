@@ -1,5 +1,5 @@
 const express = require('express')
-const { createReminder, readReminder, deleteReminder, readOneReminder } = require('../../controllers/reminderController')
+const { createReminder, readReminder, readOneReminder, updateReminder, deleteReminder } = require('../../controllers/reminderController')
 const {validateJwt, handleErrorAuthentication} = require('../../middlewares/tokenValidator')
 const check = require("../../middlewares/auth")
 
@@ -15,8 +15,9 @@ routerReminder.get('/',check.auth, prueba )
 // routerReminder.route('/create-reminder').post(createReminder)
 
 routerReminder .post("/create", check.auth, createReminder)
-routerReminder .get("/read/:id",check.auth, readOneReminder)
 routerReminder .get("/read", check.auth, readReminder)
+routerReminder .get("/read/:id",check.auth, readOneReminder)
+routerReminder .put("/update/:id",check.auth, updateReminder)
 routerReminder .delete("/delete/:id",check.auth, deleteReminder)
 
 

@@ -12,7 +12,7 @@ const createReminder = async (req, res) => {
     try {
         // Recoger datos del body
         const params = req.body;
-        
+
         // Si no llegan, retornar respuesta negativa
         if (!params.remindername || !params.price || !params.date) {
             return res.status(400).send({
@@ -98,36 +98,10 @@ const readReminder = async (req, res) => {
     }
 }
 
-
-
-//eliminar Reminder
-const deleteReminder = async (req, res) => {
-
-    //Obtener el id de la publicacion que se quiere eliminar
-    const reminderId = req.params.id
-    
-
-    //Buscar y borrar (solo reminder que creo el usuario autenticado)
-    try {
-        await Reminder.deleteOne({ "user": req.user.id, "_id": reminderId });
-        return res.status(200).send({
-            status: "success",
-            message: "reminder eliminada",
-            reminder: reminderId
-        });
-    } catch (error) {
-        return res.status(500).send({
-            status: "error",
-            message: "No se ha eliminado la publicación"
-        });
-    }
-    
-}
-
 const readOneReminder = async (req, res) => {
     // Obtener el ID del recordatorio que se quiere mostrar
     const reminderId = req.params.id;
-    
+
     try {
         // Buscar el recordatorio por su ID y asegurarse de que pertenezca al usuario autenticado
         const reminder = await Reminder.findOne({ "_id": reminderId, "user": req.user.id });
@@ -156,6 +130,97 @@ const readOneReminder = async (req, res) => {
 
 
 
+const updateReminder = async (req, res) => {
+    try {
+        // Recoger el ID del recordatorio que se quiere actualizar
+        const reminderId = req.params.id;
+
+        // Recoger los datos del body
+        const updatedData = req.body;
+
+        // Verificar que al menos uno de los campos se esté actualizando
+        if (!updatedData.remindername && !updatedData.price && !updatedData.date) {
+            return res.status(400).send({
+                status: "error",
+                message: "Debes proporcionar al menos un campo para actualizar"
+            });
+        }
+
+        // Buscar el recordatorio por su ID y asegurarse de que pertenezca al usuario autenticado
+        const reminder = await Reminder.findOne({ "_id": reminderId, "user": req.user.id });
+
+        if (!reminder) {
+            return res.status(404).send({
+                status: "error",
+                message: "No se ha encontrado el recordatorio para actualizar"
+            });
+        }
+
+        // Actualizar los campos necesarios
+        if (updatedData.remindername) {
+            reminder.remindername = updatedData.remindername;
+        }
+
+        if (updatedData.price) {
+            reminder.price = updatedData.price;
+        }
+
+        if (updatedData.date) {
+            reminder.date = updatedData.date;
+        }
+
+        // Guardar los cambios en la base de datos
+        const updatedReminder = await reminder.save();
+
+        if (!updatedReminder) {
+            return res.status(500).send({
+                status: "error",
+                message: "No se pudieron guardar los cambios del recordatorio"
+            });
+        }
+
+        // Devolver respuesta
+        return res.status(200).send({
+            status: "success",
+            message: "Recordatorio actualizado con éxito"
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "Error interno del servidor"
+        });
+    }
+};
+
+
+
+//eliminar Reminder
+const deleteReminder = async (req, res) => {
+
+    //Obtener el id de la publicacion que se quiere eliminar
+    const reminderId = req.params.id
+
+
+    //Buscar y borrar (solo reminder que creo el usuario autenticado)
+    try {
+        await Reminder.deleteOne({ "user": req.user.id, "_id": reminderId });
+        return res.status(200).send({
+            status: "success",
+            message: "reminder eliminada",
+            reminder: reminderId
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "No se ha eliminado la publicación"
+        });
+    }
+
+}
+
+
+
+
 
 const pruebaReminder = (req, res) => {
     return res.status(200).send({
@@ -166,4 +231,4 @@ const pruebaReminder = (req, res) => {
 }
 
 
-module.exports = { pruebaReminder, createReminder, readReminder, deleteReminder, readOneReminder }
+module.exports = { pruebaReminder, createReminder, readReminder, updateReminder, deleteReminder, readOneReminder }
