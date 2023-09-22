@@ -82,31 +82,27 @@ const readReminder = async (req, res) => {
 
 
 //eliminar Reminder
-const deleteReminder = (req, res) => {
+const deleteReminder = async (req, res) => {
 
     //Obtener el id de la publicacion que se quiere eliminar
     const reminderId = req.params.id
-    console.log(req.user)
+    console.log(reminderId)
 
     //Buscar y borrar (solo reminder que creo el usuario autenticado)
-    Reminder.find({ "user": req.user.id, "_id": reminderId }).remove(error => {
-        if (error) {
-            return res.status(500).send({
-                status: "error",
-                message: "No se ha eliminado la publicacion"
-            })
-        }
-
-        //devolver la respuesta
+    try {
+        await Reminder.deleteOne({ "user": req.user.id, "_id": reminderId });
         return res.status(200).send({
             status: "success",
             message: "reminder eliminada",
             reminder: reminderId
-
-        })
-    })
-
-
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "No se ha eliminado la publicación"
+        });
+    }
+    
 }
 
 

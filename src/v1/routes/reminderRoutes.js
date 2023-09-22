@@ -16,7 +16,7 @@ routerReminder.get('/',check.auth, prueba )
 routerReminder.route('/').post(check.auth, createReminder )
 routerReminder .post("/create", check.auth, createReminder)
 routerReminder .get("/read/:id", readReminder)
-routerReminder .delete("/delete/:id", deleteReminder)
+routerReminder .delete("/delete/:id",check.auth, deleteReminder)
 
 
 module.exports = routerReminder
