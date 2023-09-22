@@ -4,6 +4,7 @@ const fs = require("fs")
 const path = require("path")
 const Reminder = require("../models/Reminder")
 const user = require("../models/User")
+const { createResponse } = require('../utils/responseGenerator')
 
 //importar servicios
 
@@ -194,29 +195,64 @@ const updateReminder = async (req, res) => {
 
 
 
-//eliminar Reminder
+// //eliminar Reminder
+// const deleteReminder = async (req, res) => {
+
+//     //Obtener el id de la publicacion que se quiere eliminar
+//     const reminderId = req.params.id
+
+//     console.log(reminderId)
+
+//     const buscada = await Reminder.findById({"_id": reminderId})
+//     console.log(buscada)
+
+//     //Buscar y borrar (solo reminder que creo el usuario autenticado)
+//     try {
+//         await Reminder.deleteOne({ "user": req.user.id, "_id": reminderId });
+//         return res.status(200).send({
+//             status: "success",
+//             message: "reminder eliminWWWWada",
+//             reminder: reminderId
+//         });
+//     } catch (error) {
+//         return res.status(500).send({
+//             status: "error",
+//             message: "No se ha eliminado la publicación"
+//         });
+//     }
+
+// }
+
 const deleteReminder = async (req, res) => {
+    const userId = req.user.id;
+    const { id } = req.params;
 
-    //Obtener el id de la publicacion que se quiere eliminar
-    const reminderId = req.params.id
-
-
-    //Buscar y borrar (solo reminder que creo el usuario autenticado)
     try {
-        await Reminder.deleteOne({ "user": req.user.id, "_id": reminderId });
+        // Buscar el recordatorio por su ID y asegurarse de que pertenezca al usuario autenticado
+        const reminderToDelete = await Reminder.findOne({ _id: id, user: userId });
+
+        if (!reminderToDelete) {
+            return res.status(404).send({
+                status: "error",
+                message: "El recordatorio no se encuentra o no pertenece al usuario autenticado."
+            });
+        }
+
+        // Eliminar el recordatorio
+        await Reminder.deleteOne({ _id: id, user: userId });
+
         return res.status(200).send({
             status: "success",
-            message: "reminder eliminada",
-            reminder: reminderId
+            message: "El recordatorio ha sido eliminado exitosamente."
         });
     } catch (error) {
         return res.status(500).send({
             status: "error",
-            message: "No se ha eliminado la publicación"
+            message: "Ha ocurrido un error interno del servidor al intentar eliminar el recordatorio."
         });
     }
+};
 
-}
 
 
 
