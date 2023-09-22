@@ -12,9 +12,9 @@ const createReminder = async (req, res) => {
     try {
         // Recoger datos del body
         const params = req.body;
-        console.log(params)
+        
         // Si no llegan, retornar respuesta negativa
-        if (!params.name || !params.price || !params.date) {
+        if (!params.remindername || !params.price || !params.date) {
             return res.status(400).send({
                 status: "error",
                 message: "Debes enviar el texto"
@@ -39,7 +39,7 @@ const createReminder = async (req, res) => {
         }
 
         // Devolver respuesta
-        return res.status(200).send("ok")
+        return res.status(200).send("Recordatorio creado con exito")
     } catch (error) {
         return res.status(500).send({
             status: "error",
@@ -50,35 +50,54 @@ const createReminder = async (req, res) => {
 
 
 // //Obtener Reminder
+// const readReminder = async (req, res) => {
+//   try {
+//       // Sacar el id de la publicación de la URL
+//       const reminderId = req.params.id;
+//       console.log(reminderId);
+
+//       // Usar async/await para realizar la búsqueda por ID
+//       const reminderStored = await Reminder.findById(reminderId);
+
+//       if (!reminderStored) {
+//           return res.status(404).send({
+//               status: "error",
+//               message: "No se encontró el recordatorio"
+//           });
+//       }
+
+//       // Devolver respuesta
+//       return res.status(200).send({
+//           status: "success",
+//           message: "Detalle",
+//           reminder: reminderStored
+//       });
+//   } catch (error) {
+//       return res.status(500).send({
+//           status: "error",
+//           message: "Error interno del servidor"
+//       });
+//   }
+// };
+
 const readReminder = async (req, res) => {
-  try {
-      // Sacar el id de la publicación de la URL
-      const reminderId = req.params.id;
-      console.log(reminderId);
+    try {
+        // Buscar todos los recordatorios del usuario autenticado
+        const reminders = await Reminder.find({ "user": req.user.id });
 
-      // Usar async/await para realizar la búsqueda por ID
-      const reminderStored = await Reminder.findById(reminderId);
+        return res.status(200).send({
+            status: "success",
+            message: "Reminders encontrados",
+            reminders: reminders
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "No se han encontrado reminders"
+        });
+    }
+}
 
-      if (!reminderStored) {
-          return res.status(404).send({
-              status: "error",
-              message: "No se encontró el recordatorio"
-          });
-      }
-
-      // Devolver respuesta
-      return res.status(200).send({
-          status: "success",
-          message: "Detalle",
-          reminder: reminderStored
-      });
-  } catch (error) {
-      return res.status(500).send({
-          status: "error",
-          message: "Error interno del servidor"
-      });
-  }
-};
 
 
 //eliminar Reminder
@@ -86,7 +105,7 @@ const deleteReminder = async (req, res) => {
 
     //Obtener el id de la publicacion que se quiere eliminar
     const reminderId = req.params.id
-    console.log(reminderId)
+    
 
     //Buscar y borrar (solo reminder que creo el usuario autenticado)
     try {
@@ -105,61 +124,35 @@ const deleteReminder = async (req, res) => {
     
 }
 
+const readOneReminder = async (req, res) => {
+    // Obtener el ID del recordatorio que se quiere mostrar
+    const reminderId = req.params.id;
+    
+    try {
+        // Buscar el recordatorio por su ID y asegurarse de que pertenezca al usuario autenticado
+        const reminder = await Reminder.findOne({ "_id": reminderId, "user": req.user.id });
 
+        if (!reminder) {
+            // Si no se encuentra el recordatorio o no pertenece al usuario, retornar un error
+            return res.status(404).send({
+                status: "error",
+                message: "No se ha encontrado el recordatorio"
+            });
+        }
 
-
-
-
-// //listar las Reminder de un usuario
-// const feed = async (req, res) => {
-//     //Obtener pagina actual
-//     let page = 1
-
-//     if (req.params.page) {
-//         page = req.params.page
-
-//     }
-
-//     //Establecer numero de elementos por pagina
-//     let itemsPerPage = 5
-
-
-//     try {
-//         //Sacar un array limpio de identificadores de usuarios que yo sigo como usuario identificado
-//         const myFollows = await followService.followUserIds(req.user.id)
-
-//         // Buscar publicaciones in, ordenar, popular , paginar
-//         const publications = await Publication.find({ user: myFollows.following })
-//             .populate("user","-password -role -__v -email")
-//             .sort("-created_at")
-
-//             .paginate(page, itemsPerPage)
-
-//         return res.status(200).send({
-//             status: "success",
-//             message: "Fedd",
-//             following: myFollows.following,
-//             publications
-//         })
-
-//     } catch (error) {
-//         return res.status(500).send({
-//             status: "error",
-//             message: "No se han listado las publicaciones del Feed",
-
-//         })
-//     }
-
-
-//     return res.status(200).send({
-//         status: "success",
-//         message: "Fedd",
-
-//     })
-
-// }
-
-
+        // Si se encuentra el recordatorio y pertenece al usuario, retornar el resultado
+        return res.status(200).send({
+            status: "success",
+            message: "Recordatorio encontrado",
+            reminder: reminder
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "Ha ocurrido un error al buscar el recordatorio"
+        });
+    }
+}
 
 
 
@@ -173,4 +166,4 @@ const pruebaReminder = (req, res) => {
 }
 
 
-module.exports = { pruebaReminder, createReminder, readReminder, deleteReminder }
+module.exports = { pruebaReminder, createReminder, readReminder, deleteReminder, readOneReminder }
