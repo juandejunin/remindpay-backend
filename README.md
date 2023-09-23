@@ -115,34 +115,47 @@ localhost:8000/api/auth/login
 }
 ```
 
-### Configuracion de las notificaciones de pago (Setting)
+## Endpoint Recordatorios
 
-Este endpoint se utiliza temporalmente para llevar a cabo pruebas de autenticación.
+Para todos los endpoints CRUD de recordatorios, es necesario estar autenticados. Deberás incluir en la cabecera la clave "Authorization" y completar el campo con el token JWT obtenido en el inicio de sesión.
 
-#### URL del Endpoint (Metodo GET)
+### create reminder
 
-```
-localhost:8000/api/set/seting
-```
-
-Para acceder a este endpoint, debes proporcionar los siguientes datos en la cabecera:
-
-Key:
+#### URL del Endpoint
 
 ```
-Authorization
+localhost:8000/api/reminder/create
 ```
 
-Value (el token obtenido al iniciar sesión). Por ejemplo:
+#### Campos que recibe en formato json
 
-```
-beaer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTQ4NDk1MzksImV4cCI6MTY5NDg5MjczOX0.9W0BcO8pdxHfmVMOZL92fHTkX6n8Sb02_z3oo9ocSwM
-```
+{
+    "remindername":"cablevision",
+    "price":"78888",
+    "date": "2024-09-23T10:30:22"
+}
 
 #### Respuesta en caso de éxito
 
-Una cadena de texto:
+```
+Recordatorio creado con exito
+```
 
-```
-Si llegaste hasta aca es porque pudiste autenticarte exitosamente
-```
+
+
+
+## El formato ISO 8601 sigue una estructura específica
+
+Fecha (AAAA-MM-DD): Representa la parte de la fecha con el año (AAAA), el mes (MM) y el día (DD) separados por guiones ("-"). Por ejemplo, "2023-09-22" representa el 22 de septiembre de 2023.
+
+Hora (HH:MM:SS.sss): Representa la parte de la hora con la hora (HH), los minutos (MM) y los segundos (SS) separados por dos puntos (":"). Opcionalmente, se puede incluir una fracción de segundo (sss) después de un punto decimal. Por ejemplo, "14:30:00" representa las 2:30 PM, mientras que "14:30:45.123" representa las 2:30:45.123 segundos.
+
+Zona horaria: Opcionalmente, se puede incluir una zona horaria al final de la cadena. Por ejemplo, "+00:00" representa la zona horaria UTC (Tiempo Universal Coordinado).
+
+Ejemplos de fechas y horas en formato ISO 8601:
+
+Fecha: "2023-09-22" (22 de septiembre de 2023)
+Hora: "14:30:00" (2:30 PM)
+Fecha y hora: "2023-09-22T14:30:00" (22 de septiembre de 2023, 2:30 PM)
+Fecha, hora y zona horaria: "2023-09-22T14:30:00+00:00" (22 de septiembre de 2023, 2:30 PM en UTC)
+El formato ISO 8601 es muy útil porque es independiente de la configuración regional y permite una representación unificada de fechas y horas en todo el mundo, lo que facilita el intercambio de información entre sistemas y aplicaciones.
