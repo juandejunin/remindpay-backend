@@ -1,46 +1,56 @@
-// Importar modulos
+// Importar módulos
 const jwt = require('jwt-simple')
 const moment = require('moment')
 require('dotenv').config()
 
-// importar clave secreta
-
-// clave secreta
+// Clave secreta
 const SECRET_KEY = process.env.JWT_SECRET_KEY
 
-// Middleware de autenticacion
+// Middleware de autenticación
 exports.auth = (req, res, next) => {
-  // Comprobar sime llega la cabecera de auth
-  if (!req.headers.authorization) {
+  // Comprobar si llega la cabecera de autenticación
+  const authorizationHeader = req.headers.authorization
+
+  if (!authorizationHeader) {
     return res.status(403).send({
       status: 'error',
-      message: 'La peticion no tiene la cabecera de autenticacion'
+      message: 'La petición no tiene la cabecera de autenticación'
     })
   }
-  // limpiar token
-  const token = req.headers.authorization.replace(/[]"+/g, '')
+
+  // Verificar si la cabecera de autorización comienza con 'Bearer ' (sin distinción de mayúsculas/minúsculas).
+  const isBearerToken = authorizationHeader.toLowerCase().startsWith('bearer ')
+
+  if (!isBearerToken) {
+    return res.status(401).send({
+      status: 'error',
+      message: 'Formato de autorización inválido. Se espera un token tipo "Bearer <token>"'
+    })
+  }
+
+  // Extraer el token después de 'Bearer '.
+  const token = authorizationHeader.split(' ')[1]
+
   // Decodificar token
   try {
     const payload = jwt.decode(token, SECRET_KEY)
 
-    // comprobar expiracion del token
+    // Comprobar la expiración del token
     if (payload.exp <= moment().unix()) {
       return res.status(401).send({
         status: 'error',
         message: 'Token expirado'
-
       })
     }
 
     // Agregar datos de usuario a request
     req.user = payload
+    next()
   } catch (error) {
-    return res.status(404).send({
+    return res.status(401).send({
       status: 'error',
-      message: 'Token invalido',
+      message: 'Token inválido',
       error
     })
   }
-  // Pasar a la ejecucion de accion
-  next()
 }
