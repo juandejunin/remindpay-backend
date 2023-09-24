@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer')
-const cron = require('node-cron')
 require('dotenv').config()
 
 // Crear funcion que reciba el nombre del recordatorio, la fecha y el precio y envie un correo en la fecha indicada con los datos correspondientes.
