@@ -142,7 +142,136 @@ Recordatorio creado con exito
 ```
 
 
+### update reminder
 
+#### URL del Endpoint
+
+```
+localhost:8000/api/reminder/update/<id del recordatorio>
+```
+
+#### Campos que recibe en formato json
+
+```
+{
+    "remindername":"netflix",
+    "price":"5",
+    "date": "2024-09-23T03:22:00"
+}
+```
+
+
+#### Respuesta en caso de éxito
+
+```
+{
+    "status": "success",
+    "message": "Recordatorio actualizado con éxito"
+}
+```
+
+### Read reminder
+
+#### URL del Endpoint
+
+```
+localhost:8000/api/reminder/read
+```
+
+#### Campos que recibe en formato json
+
+```
+{
+    "remindername":"netflix",
+    "price":"5",
+    "date": "2024-09-23T03:22:00"
+}
+```
+
+
+#### Respuesta en caso de éxito
+
+```
+{
+    "status": "success",
+    "message": "Reminders encontrados",
+    "reminders": [
+        
+        {
+            "_id": "650e3d9b2ec784e611870cc5",
+            "remindername": "cablevision",
+            "price": "78888",
+            "date": "2023-09-23T01:22:00.000Z",
+            "created_at": "2023-09-23T01:21:31.291Z",
+            "user": "650db166eef5d154365d8a62",
+            "__v": 0
+        },
+        {
+            "_id": "650fd916767b52be359bc91a",
+            "remindername": "netflix",
+            "price": "78888",
+            "date": "2023-09-23T01:22:00.000Z",
+            "created_at": "2023-09-24T06:37:10.079Z",
+            "user": "650db166eef5d154365d8a62",
+            "__v": 0
+        },
+        {
+            "_id": "650fd93d1c7bc60fbdbfb2a1",
+            "remindername": "amazon",
+            "price": "78888",
+            "date": "2023-09-23T01:22:00.000Z",
+            "created_at": "2023-09-24T06:37:49.119Z",
+            "user": "650db166eef5d154365d8a62",
+            "__v": 0
+        }
+    ]
+}
+```
+
+### Read One reminder
+
+#### URL del Endpoint
+
+```
+localhost:8000/api/reminder/read/<id del recordatorio>
+```
+
+
+#### Respuesta en caso de éxito
+
+```
+{
+    "status": "success",
+    "message": "Recordatorio encontrado",
+    "reminder": {
+        "_id": "6511124a97a336e8fd76bed0",
+        "remindername": "cablevision",
+        "price": "78888",
+        "date": "2023-09-23T01:22:00.000Z",
+        "created_at": "2023-09-25T04:53:30.103Z",
+        "user": "650db166eef5d154365d8a62",
+        "__v": 0
+    }
+}
+```
+
+### Delete reminder
+
+#### URL del Endpoint
+
+```
+localhost:8000/api/reminder/delete/<id del recordatorio>
+```
+
+
+#### Respuesta en caso de éxito
+
+```
+{
+    "status": "success",
+    "message": "El recordatorio ha sido eliminado exitosamente."
+}
+```
 
 ## El formato ISO 8601 sigue una estructura específica
 
