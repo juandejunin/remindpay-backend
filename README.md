@@ -12,9 +12,9 @@ git clone https://github.com/juandejunin/remindpay-backend.git
 
 ## Opción levantar el repositorio en local
 
-#### 1- Crea en la raíz del repositorio un archivo .env basado en el ejemplo proporcionado en .env-example.txt
+1- Crea en la raíz del repositorio un archivo .env basado en el ejemplo proporcionado en .env-example.txt
 
-#### 2- Ejecutar el comando
+2- Ejecutar el comando
 
 ```
 npm i
