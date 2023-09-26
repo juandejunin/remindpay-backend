@@ -71,64 +71,6 @@ const registerUser = async (req, res) => {
   })
 }
 
-// // Función para registrar un usuario.
-// const registerUser = async (req, res) => {
-//   try {
-//     // Valida los datos del usuario utilizando las reglas definidas en validationResult.
-//     const errors = validationResult(req)
-//     if (!errors.isEmpty()) {
-//       return createResponse(res, false, null, errors.array(), 400)
-//     }
-
-//     // Extrae los campos del cuerpo de la solicitud.
-//     const { username, email, password } = req.body
-
-//     if (!username || !email || !password) {
-//       return createResponse(res, false, null, 'The username, email, and password fields are required', 401)
-//     }
-
-//     // Verifica si ya existe un usuario con el mismo nombre de usuario o correo electrónico.
-//     const usernameExists = await User.findOne({ username })
-//     const emailExists = await User.findOne({ email })
-
-//     if (usernameExists || emailExists) {
-//       return createResponse(res, false, null, 'Invalid Email/Username', 400)
-//     }
-
-//     // Genera un hash de la contraseña antes de almacenarla en la base de datos.
-//     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
-
-//     // Crea un objeto userData con los datos del usuario y la contraseña hash.
-//     const userData = { ...req.body, password: passwordHash, security: initUserSeguridad() }
-
-//     // Crea un nuevo usuario en la base de datos.
-//     const createdUser = await User.create(userData)
-
-//     // Envía un correo de verificación al usuario recién registrado.
-//     await sendVerificationMail(createdUser, buildHostName(req))
-
-//     const data = {
-//       msg: 'Registered successfully. ' + MSG_NO_VERIFICADO,
-//       id: createdUser._id
-//     }
-
-//     return createResponse(res, true, data, null, 201) // Respuesta de éxito.
-//   } catch (error) {
-//     // Manejo de errores
-//     console.error(error)
-//     return createResponse(res, false, null, 'Internal Server Error', 500)
-//   }
-// }
-
-// // Función para generar respuestas
-// const createResponse = (res, success, data, message, status) => {
-//   res.status(status).json({
-//     success,
-//     data,
-//     message
-//   })
-// }
-
 const loginUser = async (req, res) => {
   // Recoger parametros que lleguen en la peticion
   const params = req.body

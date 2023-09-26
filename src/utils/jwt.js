@@ -10,9 +10,7 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY
 exports.createToken = (user) => {
   const payload = {
     id: user._id,
-    name: user.name,
-    surname: user.surname,
-    nick: user.nick,
+    username: user.username,
     email: user.email,
     role: user.role,
     imagen: user.imagen,

@@ -20,16 +20,16 @@ const createReminder = async (req, res) => {
 
     const fechaEnCuerpo = params.date
 
+    const userRemind = req.user
     params.date = new Date(fechaEnCuerpo)
     // Crear y rellenar el objeto del modelo
     const newReminder = new Reminder(params)
-    newReminder.user = req.user.id
-
+    newReminder.user = userRemind.id
     // Guardar el objeto en la base de datos
 
     const reminderStored = await newReminder.save()
     const fechaISO = new Date(fechaEnCuerpo)
-    programarTareaEnFecha(fechaISO)
+    programarTareaEnFecha(fechaISO, userRemind.username, userRemind.email, newReminder.remindername, newReminder.price, newReminder.date)
     if (!reminderStored) {
       return res.status(400).send({
         status: 'error',
