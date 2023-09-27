@@ -1,12 +1,11 @@
 const { body } = require('express-validator')
 
 const registroValidator = [
-  body('email').trim().not().isEmpty().withMessage('Email is required')
-    .isEmail().normalizeEmail().withMessage('Invalid email'),
-
-  body('name').trim().not().isEmpty().withMessage('Name is required'),
 
   body('username').trim().not().isEmpty().withMessage('Username is required'),
+
+  body('email').trim().not().isEmpty().withMessage('Email is required')
+    .isEmail().normalizeEmail().withMessage('Invalid email'),
 
   body('password').trim().not().isEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must have at least 6 characters')
@@ -19,7 +18,6 @@ const loginValidator = [
   body('password').trim().not().isEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must have at least 6 characters')
 ]
-
 
 const modificarUsuarioValidator = [
   body('password').optional({ nullable: true }).isString().withMessage('Invalid password')
@@ -34,4 +32,4 @@ const guardarBusquedaValidator = [
   body('text').trim().not().isEmpty().isString().withMessage('Invalid search')
 ]
 
-module.exports = { registroValidator,  loginValidator,  modificarUsuarioValidator, guardarBusquedaValidator }
+module.exports = { registroValidator, loginValidator, modificarUsuarioValidator, guardarBusquedaValidator }

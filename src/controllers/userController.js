@@ -2,7 +2,6 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('../utils/jwt')
 const { validationResult } = require('express-validator')
-const { createResponse } = require('../utils/responseGenerator')
 const { initUserSeguridad, verificarUser, buildForgotPassword, passwordReset } = require('../utils/verificationManager')
 const { sendVerificationMail, sendForgotPasswordMail, sendChangedPasswordMail } = require('../utils/emailTransporter')
 const buildHostName = require('../utils/hostManager')
@@ -20,20 +19,24 @@ const MSG_NO_VERIFICADO = 'You must verify the account. Check your mail'
 const registerUser = async (req, res) => {
   let data = null
 
-  // Valida los datos del usuario utilizando las reglas definidas en validationResult.
+  // // Valida los datos del usuario utilizando las reglas definidas en validationResult.
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return createResponse(false, data, errors.array(), 400)
+    return res.status(400).json({ errors: errors.array() })
   }
 
   // Extrae los campos del cuerpo de la solicitud.
   const { username, email, password } = req.body
 
   if (!username || !email || !password) {
-    return createResponse(false, null, 'The username, email and password fields are required', 401)
+    return res.status(401).send({
+      status: 'error',
+      data,
+      message: 'The username, email and password fields are required'
+    })
   }
 
-  // Verifica si ya existe un usuario con el mismo nombre de usuario o correo electrónico.
+  // // Verifica si ya existe un usuario con el mismo nombre de usuario o correo electrónico.
   const usernameExists = await User.findOne({ username })
   const emailExists = await User.findOne({ email })
 
@@ -45,18 +48,18 @@ const registerUser = async (req, res) => {
     })
   }
 
-  // Genera un hash de la contraseña antes de almacenarla en la base de datos.
+  // // Genera un hash de la contraseña antes de almacenarla en la base de datos.
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
 
-  // Crea un objeto userData con los datos del usuario y la contraseña hash.
+  // // Crea un objeto userData con los datos del usuario y la contraseña hash.
   const userData = req.body
   userData.password = passwordHash
   userData.security = initUserSeguridad() // Inicializa la seguridad del usuario.
 
-  // Crea un nuevo usuario en la base de datos.
+  // // Crea un nuevo usuario en la base de datos.
   const createdUser = await User.create(userData)
 
-  // Envía un correo de verificación al usuario recién registrado.
+  // // Envía un correo de verificación al usuario recién registrado.
   await sendVerificationMail(createdUser, buildHostName(req))
 
   data = {
@@ -66,7 +69,7 @@ const registerUser = async (req, res) => {
 
   return res.status(201).send({
     status: 'success',
-    data,
+    // data,
     message: 'User created'
   })
 }
