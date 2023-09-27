@@ -78,6 +78,12 @@ const loginUser = async (req, res) => {
   // Recoger parametros que lleguen en la peticion
   const params = req.body
 
+  // // Valida los datos del usuario utilizando las reglas definidas en validationResult.
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+
   if (!params.email || !params.password) {
     return res.status(404).send({
       status: 'error',
