@@ -32,4 +32,10 @@ const guardarBusquedaValidator = [
   body('text').trim().not().isEmpty().isString().withMessage('Invalid search')
 ]
 
-module.exports = { registroValidator, loginValidator, modificarUsuarioValidator, guardarBusquedaValidator }
+const reminderValidator = [
+  body('remindername').trim().not().isEmpty().withMessage('remindername is required'),
+  body('price').optional({ nullable: true }).isString().withMessage('Invalid price'),
+  body('date').trim().not().isEmpty().withMessage('Invalid date')
+]
+
+module.exports = { registroValidator, loginValidator, modificarUsuarioValidator, guardarBusquedaValidator, reminderValidator }

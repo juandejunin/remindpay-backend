@@ -1,5 +1,6 @@
 // Importar modulos
 const Reminder = require('../models/Reminder')
+const { validationResult } = require('express-validator')
 const { programarTareaEnFecha } = require('../utils/scheduler')
 
 // importar servicios
@@ -9,6 +10,11 @@ const createReminder = async (req, res) => {
   try {
     // Recoger datos del body
     const params = req.body
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
 
     // Si no llegan, retornar respuesta negativa
     if (!params.remindername || !params.price || !params.date) {
