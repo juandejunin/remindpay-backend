@@ -1,4 +1,5 @@
 const { body } = require('express-validator')
+const Joi = require('joi')
 
 const registroValidator = [
 
@@ -35,7 +36,19 @@ const guardarBusquedaValidator = [
 const reminderValidator = [
   body('remindername').trim().not().isEmpty().withMessage('remindername is required'),
   body('price').optional({ nullable: true }).isString().withMessage('Invalid price'),
-  body('date').trim().not().isEmpty().withMessage('Invalid date')
+  body('date')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Invalid date')
+    .custom((value, { req }) => {
+      const dateSchema = Joi.string().isoDate()
+      const validationResult = dateSchema.validate(value)
+      if (validationResult.error) {
+        throw new Error('Invalid date format')
+      }
+      return true
+    })
 ]
 
 module.exports = { registroValidator, loginValidator, modificarUsuarioValidator, guardarBusquedaValidator, reminderValidator }
