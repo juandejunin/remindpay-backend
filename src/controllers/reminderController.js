@@ -1,7 +1,7 @@
 // Importar modulos
 const Reminder = require('../models/Reminder')
 const { validationResult } = require('express-validator')
-const { programarTareaEnFecha } = require('../utils/scheduler')
+const { programarTareaConAnticipacion } = require('../utils/scheduler')
 
 // importar servicios
 
@@ -35,7 +35,7 @@ const createReminder = async (req, res) => {
 
     const reminderStored = await newReminder.save()
     const fechaISO = new Date(fechaEnCuerpo)
-    programarTareaEnFecha(fechaISO, userRemind.username, userRemind.email, newReminder.remindername, newReminder.price, newReminder.date)
+    programarTareaConAnticipacion(fechaISO, userRemind.username, userRemind.email, newReminder.remindername, newReminder.price, newReminder.date)
     if (!reminderStored) {
       return res.status(400).send({
         status: 'error',
