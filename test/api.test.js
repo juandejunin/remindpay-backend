@@ -1,13 +1,14 @@
 const request = require('supertest')
 const should = require('should')
 const { describe, it } = require('mocha')
-
 const app = require('../src/index') // Asegúrate de ajustar la ruta a tu archivo index.js
-
 const assert = require('assert')
 
+const chai = require('chai')
+const expect = chai.expect
+
+let authToken // Para almacenar el token de autenticación
 describe('Pruebas de registro y inicio de sesión', () => {
-  let authToken // Para almacenar el token de autenticación
   // Prueba de registro de usuario
   describe('Registro de usuario', () => {
     it('Debería registrar un nuevo usuario con éxito', (done) => {
@@ -69,6 +70,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
           assert(res.body.message === 'login action')
           assert(res.body.token) // Verifica que se devuelva un token
           authToken = res.body.token // Almacena el token para usarlo en otras pruebas
+          console.log(authToken)
           done()
         })
     })
@@ -108,6 +110,136 @@ describe('User Routes', () => {
         // Verifica que la respuesta sea un objeto JSON con el mensaje esperado.
         should(res.body).be.an.Object()
         should(res.body).have.property('msg').which.is.equal('all users')
+
+        done()
+      })
+  })
+})
+
+// Crud Reminder
+
+// // Generar token
+// const jwt = require('jwt-simple')
+// const moment = require('moment')
+// require('dotenv').config()
+
+// // Clave secreta
+// const SECRET_KEY = process.env.JWT_SECRET_KEY
+
+// // Ejemplo de generación de un token JWT válido para pruebas
+// const generateAuthToken = () => {
+//   const payload = {
+//     id: 'usuario_id', // Cambia esto por un ID válido de usuario
+//     username: 'nombre_de_usuario',
+//     email: 'correo@ejemplo.com',
+//     role: 'rol_de_prueba',
+//     imagen: 'imagen_de_prueba',
+//     iat: moment().unix(),
+//     exp: moment().add(1, 'days').unix()
+//   }
+
+//   return jwt.encode(payload, SECRET_KEY)
+// }
+
+// // Ejemplo de cómo generar un token y almacenarlo en una variable
+// const authToken = generateAuthToken()
+
+describe('Pruebas CRUD de Reminder', () => {
+  let reminderId // Variable para almacenar el ID del recordatorio creado en la prueba de creación
+
+  // Prueba de creación de un recordatorio
+  it('Debería crear un nuevo recordatorio', (done) => {
+    const newReminder = {
+      remindername: 'Recordatorio de prueba',
+      price: 100,
+      date: '2023-10-10T10:00:00.000Z' // Ajusta la fecha y hora según tus necesidades
+    }
+
+    request(app)
+      .post('/api/reminder/create')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(newReminder)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('Recordatorio creado con exito')
+        expect(res.body.reminder).to.be.an('object')
+        reminderId = res.body.reminder._id // Almacena el ID del recordatorio creado
+
+        done()
+      })
+  })
+
+  // Prueba de lectura de todos los recordatorios
+  it('Debería obtener todos los recordatorios', (done) => {
+    request(app)
+      .get('/api/reminder/read')
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('Reminders encontrados')
+        expect(res.body.reminders).to.be.an('array')
+
+        done()
+      })
+  })
+
+  // Prueba de lectura de un recordatorio específico
+  it('Debería obtener un recordatorio específico', (done) => {
+    request(app)
+      .get(`/api/reminder/read/${reminderId}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('Recordatorio encontrado')
+        expect(res.body.reminder).to.be.an('object')
+
+        done()
+      })
+  })
+
+  // Prueba de actualización de un recordatorio
+  it('Debería actualizar un recordatorio existente', (done) => {
+    const updatedReminder = {
+      remindername: 'Recordatorio actualizado',
+      price: 200,
+      date: '2023-11-11T11:00:00.000Z' // Nueva fecha y hora
+    }
+
+    request(app)
+      .put(`/api/reminder/update/${reminderId}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(updatedReminder)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('Recordatorio actualizado con éxito')
+
+        done()
+      })
+  })
+
+  // Prueba de eliminación de un recordatorio
+  it('Debería eliminar un recordatorio existente', (done) => {
+    request(app)
+      .delete(`/api/reminder/delete/${reminderId}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('El recordatorio ha sido eliminado exitosamente')
 
         done()
       })
