@@ -192,4 +192,79 @@ const verifyEmail = async (req, res) => {
   }
 }
 
-module.exports = { registerUser, loginUser, verifyEmail }
+const deleteUser = async (req, res) => {
+  try {
+    // Obtiene el ID del usuario que se desea eliminar desde los parámetros de la solicitud.
+    const { id } = req.params
+    const decodedToken = 'user'
+    const IdUserRequest = req.user.id
+    // Verifica si el usuario autenticado es el propietario del documento o es un superusuario administrador.
+    if (id !== IdUserRequest && !decodedToken.isAdmin) {
+      return res.status(403).send({
+        status: 'error',
+        message: 'Unauthorized: You do not have permission to delete this user'
+      })
+    }
+
+    // Busca el usuario en la base de datos por su ID.
+    const user = await User.findById(id)
+
+    // Verifica si el usuario existe.
+    if (!user) {
+      return res.status(404).send({
+        status: 'error',
+        message: 'User not found'
+      })
+    }
+    // Realiza la eliminación del usuario.
+    await user.deleteOne({ _id: id })
+
+    return res.status(200).send({
+      status: 'success',
+      message: 'User deleted'
+    })
+  } catch (error) {
+    // Maneja cualquier error que pueda ocurrir durante la eliminación.
+    console.error(error)
+    return res.status(500).send({
+      status: 'error',
+      message: 'Server error'
+    })
+  }
+}
+
+// const deleteUser = async (req, res) => {
+//   try {
+//     // Obtiene el ID del usuario que se desea eliminar desde los parámetros de la solicitud.
+//     const { id } = req.params
+
+//     console.log(id)
+//     // Busca el usuario en la base de datos por su ID.
+//     const user = await User.findById(id)
+
+//     // Verifica si el usuario existe.
+//     if (!user) {
+//       return res.status(404).send({
+//         status: 'error',
+//         message: 'User not found'
+//       })
+//     }
+
+//     // Realiza la eliminación del usuario.
+//     await user.deleteOne({ _id: id })
+
+//     return res.status(200).send({
+//       status: 'success',
+//       message: 'User deleted'
+//     })
+//   } catch (error) {
+//     // Maneja cualquier error que pueda ocurrir durante la eliminación.
+//     console.error(error)
+//     return res.status(500).send({
+//       status: 'error',
+//       message: 'Server error'
+//     })
+//   }
+// }
+
+module.exports = { registerUser, loginUser, verifyEmail, deleteUser }

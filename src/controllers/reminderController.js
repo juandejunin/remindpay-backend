@@ -10,7 +10,7 @@ const createReminder = async (req, res) => {
   try {
     // Recoger datos del body
     const params = req.body
-
+    console.log(params)
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })

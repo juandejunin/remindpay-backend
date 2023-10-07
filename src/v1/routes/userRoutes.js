@@ -1,13 +1,15 @@
 const express = require('express')
-const { registerUser, loginUser, verifyEmail } = require('../../controllers/userController')
+const { registerUser, loginUser, verifyEmail, deleteUser } = require('../../controllers/userController')
 const { registroValidator, loginValidator } = require('../../middlewares/validators')
+const check = require('../../middlewares/auth')
 
 const routerAuth = express.Router()
 
 routerAuth.route('/register').post(registroValidator, registerUser)
 routerAuth.route('/login').post(loginValidator, loginUser)
 routerAuth.route('/user/verify/:cryptoToken').get(verifyEmail)
-// routerAuth.post('/registro', registroValidator, registerUser)
+routerAuth.delete('/delete/:id', check.auth, deleteUser)
+
 function hola (req, res) {
   res.send('hola gente')
 }
