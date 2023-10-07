@@ -6,7 +6,7 @@ const assert = require('assert')
 
 const chai = require('chai')
 const expect = chai.expect
-
+let idUser = null
 let authToken // Para almacenar el token de autenticación
 describe('Pruebas de registro y inicio de sesión', () => {
   // Prueba de registro de usuario
@@ -70,7 +70,9 @@ describe('Pruebas de registro y inicio de sesión', () => {
           assert(res.body.message === 'login action')
           assert(res.body.token) // Verifica que se devuelva un token
           authToken = res.body.token // Almacena el token para usarlo en otras pruebas
-          console.log(authToken)
+          assert(res.body.user.id)
+          idUser = res.body.user.id
+          console.log(idUser)
           done()
         })
     })
@@ -118,42 +120,18 @@ describe('User Routes', () => {
 
 // Crud Reminder
 
-// // Generar token
-// const jwt = require('jwt-simple')
-// const moment = require('moment')
-// require('dotenv').config()
-
-// // Clave secreta
-// const SECRET_KEY = process.env.JWT_SECRET_KEY
-
-// // Ejemplo de generación de un token JWT válido para pruebas
-// const generateAuthToken = () => {
-//   const payload = {
-//     id: 'usuario_id', // Cambia esto por un ID válido de usuario
-//     username: 'nombre_de_usuario',
-//     email: 'correo@ejemplo.com',
-//     role: 'rol_de_prueba',
-//     imagen: 'imagen_de_prueba',
-//     iat: moment().unix(),
-//     exp: moment().add(1, 'days').unix()
-//   }
-
-//   return jwt.encode(payload, SECRET_KEY)
-// }
-
-// // Ejemplo de cómo generar un token y almacenarlo en una variable
-// const authToken = generateAuthToken()
-
 describe('Pruebas CRUD de Reminder', () => {
   let reminderId // Variable para almacenar el ID del recordatorio creado en la prueba de creación
 
   // Prueba de creación de un recordatorio
   it('Debería crear un nuevo recordatorio', (done) => {
     const newReminder = {
-      remindername: 'Recordatorio de prueba',
-      price: 100,
-      date: '2023-10-10T10:00:00.000Z' // Ajusta la fecha y hora según tus necesidades
+      remindername: 'netflix',
+      price: '7',
+      date: '2023-10-10T10:00:00.000Z'
     }
+
+    console.log(`Token utilizado en la solicitud: ${authToken}`)
 
     request(app)
       .post('/api/reminder/create')
@@ -163,11 +141,12 @@ describe('Pruebas CRUD de Reminder', () => {
       .end((err, res) => {
         if (err) return done(err)
 
+        console.log('Respuesta del servidor:', res.body)
+
         expect(res.body.status).to.equal('success')
         expect(res.body.message).to.equal('Recordatorio creado con exito')
         expect(res.body.reminder).to.be.an('object')
-        reminderId = res.body.reminder._id // Almacena el ID del recordatorio creado
-
+        reminderId = res.body.reminder._id
         done()
       })
   })
@@ -244,4 +223,28 @@ describe('Pruebas CRUD de Reminder', () => {
         done()
       })
   })
+})
+
+// Prueba de eliminación de usuario
+describe('Eliminación de usuario', () => {
+  it('Debería eliminar un usuario existente', (done) => {
+    // Puedes utilizar el ID de un usuario creado anteriormente o buscar un usuario existente en la base de datos.
+    // idUser = 'aquí-va-el-ID-del-usuario-a-eliminar' // Reemplaza con el ID real del usuario
+
+    console.log(idUser)
+    request(app)
+      .delete(`/api/auth/delete/${idUser}`)
+      .set('Authorization', `Bearer ${authToken}`) // Asegúrate de tener un token válido para realizar la eliminación
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        expect(res.body.status).to.equal('success')
+        expect(res.body.message).to.equal('User deleted')
+
+        done()
+      })
+  })
+
+  // Otras pruebas de validación de eliminación pueden ir aquí
 })
