@@ -8,7 +8,7 @@
     "lint-fix": "eslint --fix src/**/*.js",
     "start": "cross-env NODE_ENV=production node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "mocha test/api.test.js --timeout 15000 --exit"
+    "test": "mocha test/api.test.js --timeout 10000 --exit"
   },
   "repository": {
     "type": "git",

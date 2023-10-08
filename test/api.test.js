@@ -72,7 +72,6 @@ describe('Pruebas de registro y inicio de sesión', () => {
           authToken = res.body.token // Almacena el token para usarlo en otras pruebas
           assert(res.body.user.id)
           idUser = res.body.user.id
-          console.log(idUser)
           done()
         })
     })
@@ -126,12 +125,10 @@ describe('Pruebas CRUD de Reminder', () => {
   // Prueba de creación de un recordatorio
   it('Debería crear un nuevo recordatorio', (done) => {
     const newReminder = {
-      remindername: 'netflix',
+      remindername: 'Prueba recordatorio',
       price: '7',
       date: '2023-10-10T10:00:00.000Z'
     }
-
-    console.log(`Token utilizado en la solicitud: ${authToken}`)
 
     request(app)
       .post('/api/reminder/create')
@@ -140,13 +137,10 @@ describe('Pruebas CRUD de Reminder', () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err)
-
-        console.log('Respuesta del servidor:', res.body)
-
         expect(res.body.status).to.equal('success')
         expect(res.body.message).to.equal('Recordatorio creado con exito')
         expect(res.body.reminder).to.be.an('object')
-        reminderId = res.body.reminder._id
+        reminderId = (res.body.reminder._id)
         done()
       })
   })
@@ -176,7 +170,6 @@ describe('Pruebas CRUD de Reminder', () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err)
-
         expect(res.body.status).to.equal('success')
         expect(res.body.message).to.equal('Recordatorio encontrado')
         expect(res.body.reminder).to.be.an('object')
@@ -218,7 +211,7 @@ describe('Pruebas CRUD de Reminder', () => {
         if (err) return done(err)
 
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('El recordatorio ha sido eliminado exitosamente')
+        expect(res.body.message).to.equal('El recordatorio ha sido eliminado exitosamente.')
 
         done()
       })
@@ -228,10 +221,6 @@ describe('Pruebas CRUD de Reminder', () => {
 // Prueba de eliminación de usuario
 describe('Eliminación de usuario', () => {
   it('Debería eliminar un usuario existente', (done) => {
-    // Puedes utilizar el ID de un usuario creado anteriormente o buscar un usuario existente en la base de datos.
-    // idUser = 'aquí-va-el-ID-del-usuario-a-eliminar' // Reemplaza con el ID real del usuario
-
-    console.log(idUser)
     request(app)
       .delete(`/api/auth/delete/${idUser}`)
       .set('Authorization', `Bearer ${authToken}`) // Asegúrate de tener un token válido para realizar la eliminación
