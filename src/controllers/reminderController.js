@@ -44,7 +44,12 @@ const createReminder = async (req, res) => {
     }
 
     // Devolver respuesta
-    return res.status(200).send('Recordatorio creado con exito')
+
+    return res.status(200).send({
+      status: 'success',
+      message: 'Recordatorio creado con exito',
+      reminder: reminderStored
+    })
   } catch (error) {
     return res.status(500).send({
       status: 'error',
