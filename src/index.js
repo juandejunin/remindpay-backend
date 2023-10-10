@@ -1,6 +1,6 @@
 // Importa y configura la biblioteca 'dotenv' para cargar las variables de entorno desde un archivo .env.
 require('dotenv').config()
-
+const {programarTareaConAnticipacion} = require('../src/utils/scheduler')
 const { logger, LogEntry } = require('../logger/apiLogger')
 // Importa y conecta a la base de datos utilizando el módulo './database/db'.
 require('./database/db').connectDB()
@@ -53,6 +53,9 @@ app.use('/api/reminder', reminderRoutes)
 app.use(unknownEndpoint)
 // Configura middleware para manejar errores.
 app.use(errorHandler)
+
+programarTareaConAnticipacion()
+
 // Inicia el servidor Express en el puerto definido en PORT.
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
