@@ -1,4 +1,5 @@
 const { createResponse } = require('../utils/responseGenerator')
+const { logger, LogEntry } = require('../../logger/apiLogger')
 
 const errorHandler = (error, request, response, next) => {
   let responseData = null
@@ -23,6 +24,7 @@ const errorHandler = (error, request, response, next) => {
     data,
     errorMsg
   }
+  logger.error(error.stack)
   response.status(statusCode).json(resp)
 }
 
