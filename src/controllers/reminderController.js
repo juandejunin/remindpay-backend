@@ -1,7 +1,6 @@
 // Importar modulos
 const Reminder = require('../models/Reminder')
 const { validationResult } = require('express-validator')
-const { programarTareaConAnticipacion } = require('../utils/scheduler')
 
 // importar servicios
 
@@ -10,7 +9,7 @@ const createReminder = async (req, res) => {
   try {
     // Recoger datos del body
     const params = req.body
-    console.log(params)
+    
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
@@ -23,7 +22,6 @@ const createReminder = async (req, res) => {
         message: 'Debes enviar el texto'
       })
     }
-
     const fechaEnCuerpo = params.date
 
     const userRemind = req.user
@@ -34,8 +32,9 @@ const createReminder = async (req, res) => {
     // Guardar el objeto en la base de datos
 
     const reminderStored = await newReminder.save()
-    const fechaISO = new Date(fechaEnCuerpo)
-    programarTareaConAnticipacion(fechaISO, userRemind.username, userRemind.email, newReminder.remindername, newReminder.price, newReminder.date)
+    // const fechaISO = new Date(fechaEnCuerpo)
+    console.log(reminderStored)
+
     if (!reminderStored) {
       return res.status(400).send({
         status: 'error',
