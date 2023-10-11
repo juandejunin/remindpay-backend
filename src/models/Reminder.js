@@ -44,7 +44,7 @@ ReminderSchema.pre('save', function (next) {
   this.alarmDate5 = alarmDate5
 
   const alarmDate1 = new Date(this.date)
-  alarmDate1.setDate(alarmDate1.getDate() - 5)
+  alarmDate1.setDate(alarmDate1.getDate() - 1)
   this.alarmDate1 = alarmDate1
   next()
 })

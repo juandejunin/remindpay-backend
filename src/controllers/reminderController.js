@@ -23,7 +23,6 @@ const createReminder = async (req, res) => {
         message: 'Debes enviar el texto'
       })
     }
-
     const fechaEnCuerpo = params.date
 
     const userRemind = req.user
