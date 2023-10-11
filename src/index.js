@@ -1,6 +1,6 @@
 // Importa y configura la biblioteca 'dotenv' para cargar las variables de entorno desde un archivo .env.
 require('dotenv').config()
-const { getReminders } = require('../src/utils/findReminders')
+const recordatorioPorCorreo = require('../src/utils/recordatorioPorCorreo')
 const { logger, LogEntry } = require('../logger/apiLogger')
 // Importa y conecta a la base de datos utilizando el módulo './database/db'.
 require('./database/db').connectDB()
@@ -30,7 +30,7 @@ const app = express()
 // Obtiene el puerto del archivo .env.
 const port = process.env.PORT
 
-getReminders()
+recordatorioPorCorreo()
 // Configura middlewares globales para la aplicación Express.
 app.use(express.urlencoded({ extended: true }))
 app.use(cors()) // Habilita el soporte CORS (Cross-Origin Resource Sharing).

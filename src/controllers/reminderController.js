@@ -1,7 +1,6 @@
 // Importar modulos
 const Reminder = require('../models/Reminder')
 const { validationResult } = require('express-validator')
-const { programarTareaConAnticipacion } = require('../utils/scheduler')
 
 // importar servicios
 

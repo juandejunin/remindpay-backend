@@ -1,4 +1,5 @@
 const Reminder = require('../models/Reminder')
+const cron = require('node-cron')
 
 async function getReminders () {
   try {
@@ -35,5 +36,11 @@ async function getReminders () {
     console.error('Error al recuperar documentos:', err)
   }
 }
+
+// Programa una tarea periódica que ejecute la función cada día a las 3:00 AM
+cron.schedule('* * * * *', async () => {
+  console.log('Ejecutando busqueda minuto a minuto')
+  await getReminders()
+})
 
 module.exports = { getReminders }
