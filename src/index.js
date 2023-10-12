@@ -1,63 +1,54 @@
-// Importa y configura la biblioteca 'dotenv' para cargar las variables de entorno desde un archivo .env.
 require('dotenv').config()
-const recordatorioPorCorreo = require('../src/utils/recordatorioPorCorreo')
-const { logger, LogEntry } = require('../logger/apiLogger')
-// Importa y conecta a la base de datos utilizando el módulo './database/db'.
-require('./database/db').connectDB()
 
-const bodyParser = require('body-parser')
-
-// Importa las bibliotecas y módulos necesarios.
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
+const bodyParser = require('body-parser')
 
-// const swaggerUI = require('swagger-ui-express')
-
-// Importa la documentación de API desde './docs'.
-
-// Importa las rutas para diferentes recursos.
+// Importa tus módulos y middlewares personalizados
+const db = require('./database/db')
+const recordatorioPorCorreo = require('../src/utils/recordatorioPorCorreo')
+const { logger, LogEntry } = require('../logger/apiLogger')
 const userRoutes = require('./v1/routes/userRoutes')
-
 const reminderRoutes = require('./v1/routes/reminderRoutes')
-
-// Importa middleware personalizado para manejar rutas desconocidas y errores.
 const unknownEndpoint = require('../src/middlewares/unknowEndpoint')
 const errorHandler = require('../src/middlewares/errorHandler')
-// Crea una instancia de la aplicación Express.
+const { swaggerDocs: V1swaggerDocs } = require('./v1/swagger')
+
 const app = express()
+const port = process.env.PORT || 3000
 
-// Obtiene el puerto del archivo .env.
-const port = process.env.PORT
+// Conexión a la base de datos.
+db.connectDB()
 
-recordatorioPorCorreo()
-// Configura middlewares globales para la aplicación Express.
+// Middlewares globales
 app.use(express.urlencoded({ extended: true }))
-app.use(cors()) // Habilita el soporte CORS (Cross-Origin Resource Sharing).
-app.use(express.json()) // Permite el análisis de solicitudes JSON.
+app.use(cors())
+app.use(express.json())
 app.use(bodyParser.json())
-app.use(helmet()) // Configura encabezados de seguridad HTTP con Helmet.
+app.use(helmet())
 
+// Verificar recordatorios de BBDD y enviar notificaciones.
+recordatorioPorCorreo()
+
+// Ruta de inicio
 app.get('/', (req, res) => {
   logger.info('Se ha realizado una solicitud GET en la ruta /')
   res.send('¡Hola, mundo!')
 })
 
-// Define rutas para diferentes recursos utilizando las rutas importadas.
-app.use('/api/auth', userRoutes) // Rutas relacionadas con usuarios.
-
+// Rutas para usuarios y recordatorios
+app.use('/api/auth', userRoutes)
 app.use('/api/reminder', reminderRoutes)
 
-// Configura una ruta para la documentación de la API utilizando Swagger.
-
-// Configura middleware para manejar rutas desconocidas.
+// Middleware para manejar rutas desconocidas y errores
 app.use(unknownEndpoint)
-// Configura middleware para manejar errores.
 app.use(errorHandler)
 
-// Inicia el servidor Express en el puerto definido en PORT.
+// Iniciar el servidor
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`)
+  logger.info(`Server started on port ${port}`)
+  V1swaggerDocs(app, port)
 })
 
 module.exports = app
