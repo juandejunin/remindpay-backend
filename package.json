@@ -43,6 +43,7 @@
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.5",
     "nodemon": "^3.0.1",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.11.0"
   },
