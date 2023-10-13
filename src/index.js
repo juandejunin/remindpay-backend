@@ -38,11 +38,11 @@ app.get('/', (req, res) => {
 })
 
 // Rutas para usuarios y recordatorios
-app.use('/api/auth', userRoutes)
-app.use('/api/reminder', reminderRoutes)
+app.use('/api/v1/auth', userRoutes)
+app.use('/api/v1/reminder', reminderRoutes)
 
 // Middleware para manejar rutas desconocidas y errores
-app.use(unknownEndpoint)
+// app.use(unknownEndpoint)
 app.use(errorHandler)
 
 // Iniciar el servidor
