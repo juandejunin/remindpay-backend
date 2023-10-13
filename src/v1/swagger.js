@@ -7,7 +7,7 @@ const options = {
     openapi: '3.0.0',
     info: { title: 'Remind Pay Backend', version: '1.0.0' }
   },
-  apis: ['./src/v1/routes/reminderRoutes.js', './src/v1/routes/reminderRoutes.js', './src/database/db.js']
+  apis: ['src/v1/routes/userRoutes.js', 'src/v1/routes/reminderRoutes.js', 'src/database/db.js']
 }
 
 // Docs en JSON format

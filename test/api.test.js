@@ -19,7 +19,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
       }
 
       request(app)
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send(userData)
         .expect(201)
         .end((err, res) => {
@@ -38,7 +38,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
       }
 
       request(app)
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send(userData)
         .expect(400)
         .end((err, res) => {
@@ -61,7 +61,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
       }
 
       request(app)
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send(loginData)
         .expect(200)
         .end((err, res) => {
@@ -83,7 +83,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
       }
 
       request(app)
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send(loginData)
         .expect(400)
         .end((err, res) => {
@@ -103,7 +103,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
 describe('User Routes', () => {
   it('should return JSON with a message for all users', (done) => {
     request(app)
-      .get('/api/auth') // Ajusta la ruta según tu configuración en el index.js
+      .get('/api/v1/auth') // Ajusta la ruta según tu configuración en el index.js
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
@@ -131,7 +131,7 @@ describe('Pruebas CRUD de Reminder', () => {
     }
 
     request(app)
-      .post('/api/reminder/create')
+      .post('/api/v1/reminder/create')
       .set('Authorization', `Bearer ${authToken}`)
       .send(newReminder)
       .expect(200)
@@ -148,7 +148,7 @@ describe('Pruebas CRUD de Reminder', () => {
   // Prueba de lectura de todos los recordatorios
   it('Debería obtener todos los recordatorios', (done) => {
     request(app)
-      .get('/api/reminder/read')
+      .get('/api/v1/reminder/read')
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .end((err, res) => {
@@ -165,7 +165,7 @@ describe('Pruebas CRUD de Reminder', () => {
   // Prueba de lectura de un recordatorio específico
   it('Debería obtener un recordatorio específico', (done) => {
     request(app)
-      .get(`/api/reminder/read/${reminderId}`)
+      .get(`/api/v1/reminder/read/${reminderId}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .end((err, res) => {
@@ -187,7 +187,7 @@ describe('Pruebas CRUD de Reminder', () => {
     }
 
     request(app)
-      .put(`/api/reminder/update/${reminderId}`)
+      .put(`/api/v1/reminder/update/${reminderId}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedReminder)
       .expect(200)
@@ -204,7 +204,7 @@ describe('Pruebas CRUD de Reminder', () => {
   // Prueba de eliminación de un recordatorio
   it('Debería eliminar un recordatorio existente', (done) => {
     request(app)
-      .delete(`/api/reminder/delete/${reminderId}`)
+      .delete(`/api/v1/reminder/delete/${reminderId}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .end((err, res) => {
@@ -222,7 +222,7 @@ describe('Pruebas CRUD de Reminder', () => {
 describe('Eliminación de usuario', () => {
   it('Debería eliminar un usuario existente', (done) => {
     request(app)
-      .delete(`/api/auth/delete/${idUser}`)
+      .delete(`/api/v1/auth/delete/${idUser}`)
       .set('Authorization', `Bearer ${authToken}`) // Asegúrate de tener un token válido para realizar la eliminación
       .expect(200)
       .end((err, res) => {
