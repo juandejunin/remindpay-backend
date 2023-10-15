@@ -1,6 +1,7 @@
 // Importar modulos
 const Reminder = require('../models/Reminder')
 const { validationResult } = require('express-validator')
+const { logger, LogEntry } = require('../../logger/apiLogger')
 
 // importar servicios
 
@@ -17,9 +18,10 @@ const createReminder = async (req, res) => {
 
     // Si no llegan, retornar respuesta negativa
     if (!params.remindername || !params.price || !params.date) {
+      logger.info('Fields cannot be empty')
       return res.status(400).send({
         status: 'error',
-        message: 'Debes enviar el texto'
+        message: 'Fields cannot be empty'
       })
     }
     const fechaEnCuerpo = params.date
@@ -32,27 +34,28 @@ const createReminder = async (req, res) => {
     // Guardar el objeto en la base de datos
 
     const reminderStored = await newReminder.save()
-    // const fechaISO = new Date(fechaEnCuerpo)
-    console.log(reminderStored)
 
     if (!reminderStored) {
+      logger.info('ReminderStored was not saved')
       return res.status(400).send({
         status: 'error',
-        message: 'No se guardó la ReminderStored'
+        message: 'ReminderStored was not saved'
       })
     }
 
     // Devolver respuesta
 
+    logger.info('Reminder created successfully')
     return res.status(200).send({
       status: 'success',
-      message: 'Recordatorio creado con exito',
+      message: 'Reminder created successfully',
       reminder: reminderStored
     })
   } catch (error) {
+    logger.info('Internal Server Error')
     return res.status(500).send({
       status: 'error',
-      message: 'Error interno del servidor'
+      message: 'Internal Server Error'
     })
   }
 }
@@ -64,13 +67,13 @@ const readReminder = async (req, res) => {
 
     return res.status(200).send({
       status: 'success',
-      message: 'Reminders encontrados',
+      message: 'Reminders found',
       reminders
     })
   } catch (error) {
     return res.status(500).send({
       status: 'error',
-      message: 'No se han encontrado reminders'
+      message: 'No reminders found'
     })
   }
 }
@@ -87,20 +90,20 @@ const readOneReminder = async (req, res) => {
       // Si no se encuentra el recordatorio o no pertenece al usuario, retornar un error
       return res.status(404).send({
         status: 'error',
-        message: 'No se ha encontrado el recordatorio'
+        message: 'No reminders found'
       })
     }
 
     // Si se encuentra el recordatorio y pertenece al usuario, retornar el resultado
     return res.status(200).send({
       status: 'success',
-      message: 'Recordatorio encontrado',
+      message: 'Reminder found',
       reminder
     })
   } catch (error) {
     return res.status(500).send({
       status: 'error',
-      message: 'Ha ocurrido un error al buscar el recordatorio'
+      message: 'An error occurred while searching for the reminder'
     })
   }
 }
@@ -117,7 +120,7 @@ const updateReminder = async (req, res) => {
     if (!updatedData.remindername && !updatedData.price && !updatedData.date) {
       return res.status(400).send({
         status: 'error',
-        message: 'Debes proporcionar al menos un campo para actualizar'
+        message: 'You must provide at least one field to update'
       })
     }
 
@@ -127,7 +130,7 @@ const updateReminder = async (req, res) => {
     if (!reminder) {
       return res.status(404).send({
         status: 'error',
-        message: 'No se ha encontrado el recordatorio para actualizar'
+        message: 'Reminder to update not found'
       })
     }
 
@@ -150,19 +153,19 @@ const updateReminder = async (req, res) => {
     if (!updatedReminder) {
       return res.status(500).send({
         status: 'error',
-        message: 'No se pudieron guardar los cambios del recordatorio'
+        message: 'Reminder changes could not be saved'
       })
     }
 
     // Devolver respuesta
     return res.status(200).send({
       status: 'success',
-      message: 'Recordatorio actualizado con éxito'
+      message: 'Reminder successfully updated'
     })
   } catch (error) {
     return res.status(500).send({
       status: 'error',
-      message: 'Error interno del servidor'
+      message: 'Internal Server Error'
     })
   }
 }
@@ -178,7 +181,7 @@ const deleteReminder = async (req, res) => {
     if (!reminderToDelete) {
       return res.status(404).send({
         status: 'error',
-        message: 'El recordatorio no se encuentra o no pertenece al usuario autenticado.'
+        message: 'The reminder cannot be found or does not belong to the authenticated user.'
       })
     }
 
@@ -187,22 +190,14 @@ const deleteReminder = async (req, res) => {
 
     return res.status(200).send({
       status: 'success',
-      message: 'El recordatorio ha sido eliminado exitosamente.'
+      message: 'The reminder has been successfully deleted.'
     })
   } catch (error) {
     return res.status(500).send({
       status: 'error',
-      message: 'Ha ocurrido un error interno del servidor al intentar eliminar el recordatorio.'
+      message: 'An internal server error occurred while trying to delete the reminder.'
     })
   }
 }
 
-const pruebaReminder = (req, res) => {
-  return res.status(200).send({
-    message: 'Mensaje enviado desde el controlador reminder',
-    usuario: req.user
-
-  })
-}
-
-module.exports = { pruebaReminder, createReminder, readReminder, updateReminder, deleteReminder, readOneReminder }
+module.exports = { createReminder, readReminder, updateReminder, deleteReminder, readOneReminder }

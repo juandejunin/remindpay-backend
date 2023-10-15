@@ -353,8 +353,6 @@ const prueba = async (req, res) => {
  *                   example: Internal server error
  */
 
-routerReminder.get('/', check.auth, prueba)
-
 routerReminder.post('/create', check.auth, reminderValidator, createReminder)
 routerReminder.get('/read', check.auth, readReminder)
 routerReminder.get('/read/:id', check.auth, readOneReminder)

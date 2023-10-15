@@ -1,43 +1,5 @@
 const { Schema, model } = require('mongoose')
 
-/**
- * @openapi
- * components:
- *   schemas:
- *     Workout:
- *       type: object
- *       properties:
- *         id: 
- *           type: string
- *           example: 61dbae02-c147-4e28-863c-db7bd402b2d6
- *         name: 
- *           type: string
- *           example: Tommy V  
- *         mode:
- *           type: string
- *           example: For Time
- *         equipment:
- *           type: array
- *           items:
- *             type: string
- *           example: ["barbell", "rope"]
- *         exercises:
- *           type: array
- *           items:
- *             type: string
- *           example: ["21 thrusters", "12 rope climbs, 15 ft", "15 thrusters", "9 rope climbs, 15 ft", "9 thrusters", "6 rope climbs, 15 ft"]
- *         createdAt:
- *           type: string
- *           example: 4/20/2022, 2:21:56 PM
- *         updatedAt: 
- *           type: string
- *           example: 4/20/2022, 2:21:56 PM
- *         trainerTips:
- *           type: array
- *           items:
- *             type: string
- *           example: ["Split the 21 thrusters as needed", "Try to do the 9 and 6 thrusters unbroken", "RX Weights: 115lb/75lb"]
- */
 const ReminderSchema = Schema({
   user: {
     type: Schema.ObjectId,
@@ -88,3 +50,54 @@ ReminderSchema.pre('save', function (next) {
 })
 
 module.exports = model('Reminder', ReminderSchema)
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Reminder:
+ *       type: object
+ *       properties:
+ *         user:
+ *           type: string
+ *           description: El ID del usuario al que pertenece el recordatorio.
+ *           example: 61dbae02-c147-4e28-863c-db7bd402b2d6
+ *         remindername:
+ *           type: string
+ *           description: El nombre del recordatorio.
+ *           example: Comprar regalos de cumpleaños
+ *         price:
+ *           type: string
+ *           description: El precio estimado asociado al recordatorio.
+ *           example: $100
+ *         date:
+ *           type: string
+ *           format: date-time
+ *           description: La fecha y hora del recordatorio.
+ *           example: 2023-10-31T15:00:00Z
+ *         alarmDate7:
+ *           type: string
+ *           format: date-time
+ *           description: Fecha de alarma calculada 7 días antes del recordatorio.
+ *           example: 2023-10-24T15:00:00Z
+ *         alarmDate5:
+ *           type: string
+ *           format: date-time
+ *           description: Fecha de alarma calculada 5 días antes del recordatorio.
+ *           example: 2023-10-26T15:00:00Z
+ *         alarmDate1:
+ *           type: string
+ *           format: date-time
+ *           description: Fecha de alarma calculada 1 día antes del recordatorio.
+ *           example: 2023-10-30T15:00:00Z
+ *         file:
+ *           type: string
+ *           description: Nombre de archivo asociado al recordatorio (si aplicable).
+ *           example: reminder.pdf
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           description: La fecha y hora en que se creó el recordatorio.
+ *           example: 2023-10-10T12:30:00Z
+ */
+
