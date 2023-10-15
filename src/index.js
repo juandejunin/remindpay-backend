@@ -34,7 +34,7 @@ recordatorioPorCorreo()
 // Ruta de inicio
 app.get('/', (req, res) => {
   logger.info('Se ha realizado una solicitud GET en la ruta /')
-  res.send('¡Hola, mundo!')
+  res.send('RemindPay')
 })
 
 // Rutas para usuarios y recordatorios
@@ -42,7 +42,7 @@ app.use('/api/v1/auth', userRoutes)
 app.use('/api/v1/reminder', reminderRoutes)
 
 // Middleware para manejar rutas desconocidas y errores
-// app.use(unknownEndpoint)
+app.use(unknownEndpoint)
 app.use(errorHandler)
 
 // Iniciar el servidor

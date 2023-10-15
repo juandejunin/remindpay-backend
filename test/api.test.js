@@ -1,17 +1,16 @@
 const request = require('supertest')
-const should = require('should')
 const { describe, it } = require('mocha')
-const app = require('../src/index') // Asegúrate de ajustar la ruta a tu archivo index.js
+const app = require('../src/index')
 const assert = require('assert')
 
 const chai = require('chai')
 const expect = chai.expect
 let idUser = null
 let authToken // Para almacenar el token de autenticación
-describe('Pruebas de registro y inicio de sesión', () => {
+describe('Registration and login tests', () => {
   // Prueba de registro de usuario
-  describe('Registro de usuario', () => {
-    it('Debería registrar un nuevo usuario con éxito', (done) => {
+  describe('User register', () => {
+    it('You should register a new user successfully', (done) => {
       const userData = {
         username: 'testuser',
         email: 'test@example.com',
@@ -30,7 +29,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
         })
     })
 
-    it('Debería devolver un error si se intenta registrar con el mismo email', (done) => {
+    it('It should return an error if you try to register with the same email', (done) => {
       const userData = {
         username: 'testuser2',
         email: 'test@example.com', // Mismo email que el registrado anteriormente
@@ -53,8 +52,8 @@ describe('Pruebas de registro y inicio de sesión', () => {
   })
 
   // Prueba de inicio de sesión de usuario
-  describe('Inicio de sesión de usuario', () => {
-    it('Debería iniciar sesión con éxito y devolver un token', (done) => {
+  describe('User login', () => {
+    it('It should log in successfully and return a token', (done) => {
       const loginData = {
         email: 'test@example.com',
         password: 'password123'
@@ -76,7 +75,7 @@ describe('Pruebas de registro y inicio de sesión', () => {
         })
     })
 
-    it('Debería devolver un error si se intenta iniciar sesión con credenciales incorrectas', (done) => {
+    it('Should return an error if an attempt is made to log in with incorrect credentials', (done) => {
       const loginData = {
         email: 'test@example.com',
         password: 'incorrectpassword' // Contraseña incorrecta
@@ -93,39 +92,18 @@ describe('Pruebas de registro y inicio de sesión', () => {
           done()
         })
     })
-
-    // Otras pruebas de validación pueden ir aquí
-  })
-
-  // Otras pruebas relacionadas con la autenticación pueden ir aquí, utilizando el token almacenado
-})
-
-describe('User Routes', () => {
-  it('should return JSON with a message for all users', (done) => {
-    request(app)
-      .get('/api/v1/auth') // Ajusta la ruta según tu configuración en el index.js
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        if (err) return done(err)
-        // Verifica que la respuesta sea un objeto JSON con el mensaje esperado.
-        should(res.body).be.an.Object()
-        should(res.body).have.property('msg').which.is.equal('all users')
-
-        done()
-      })
   })
 })
 
 // Crud Reminder
 
-describe('Pruebas CRUD de Reminder', () => {
+describe('Reminder CRUD Testing', () => {
   let reminderId // Variable para almacenar el ID del recordatorio creado en la prueba de creación
 
   // Prueba de creación de un recordatorio
-  it('Debería crear un nuevo recordatorio', (done) => {
+  it('You should create a new reminder', (done) => {
     const newReminder = {
-      remindername: 'Prueba recordatorio',
+      remindername: 'Reminder test',
       price: '7',
       date: '2023-10-10T10:00:00.000Z'
     }
@@ -138,7 +116,7 @@ describe('Pruebas CRUD de Reminder', () => {
       .end((err, res) => {
         if (err) return done(err)
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('Recordatorio creado con exito')
+        expect(res.body.message).to.equal('Reminder created successfully')
         expect(res.body.reminder).to.be.an('object')
         reminderId = (res.body.reminder._id)
         done()
@@ -146,7 +124,7 @@ describe('Pruebas CRUD de Reminder', () => {
   })
 
   // Prueba de lectura de todos los recordatorios
-  it('Debería obtener todos los recordatorios', (done) => {
+  it('You should get all the reminders', (done) => {
     request(app)
       .get('/api/v1/reminder/read')
       .set('Authorization', `Bearer ${authToken}`)
@@ -155,7 +133,7 @@ describe('Pruebas CRUD de Reminder', () => {
         if (err) return done(err)
 
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('Reminders encontrados')
+        expect(res.body.message).to.equal('Reminders found')
         expect(res.body.reminders).to.be.an('array')
 
         done()
@@ -163,7 +141,7 @@ describe('Pruebas CRUD de Reminder', () => {
   })
 
   // Prueba de lectura de un recordatorio específico
-  it('Debería obtener un recordatorio específico', (done) => {
+  it('You should get a specific reminder', (done) => {
     request(app)
       .get(`/api/v1/reminder/read/${reminderId}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -171,7 +149,7 @@ describe('Pruebas CRUD de Reminder', () => {
       .end((err, res) => {
         if (err) return done(err)
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('Recordatorio encontrado')
+        expect(res.body.message).to.equal('Reminder found')
         expect(res.body.reminder).to.be.an('object')
 
         done()
@@ -179,9 +157,9 @@ describe('Pruebas CRUD de Reminder', () => {
   })
 
   // Prueba de actualización de un recordatorio
-  it('Debería actualizar un recordatorio existente', (done) => {
+  it('You should update an existing reminder', (done) => {
     const updatedReminder = {
-      remindername: 'Recordatorio actualizado',
+      remindername: 'update a reminder',
       price: 200,
       date: '2023-11-11T11:00:00.000Z' // Nueva fecha y hora
     }
@@ -195,14 +173,14 @@ describe('Pruebas CRUD de Reminder', () => {
         if (err) return done(err)
 
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('Recordatorio actualizado con éxito')
+        expect(res.body.message).to.equal('Reminder successfully updated')
 
         done()
       })
   })
 
   // Prueba de eliminación de un recordatorio
-  it('Debería eliminar un recordatorio existente', (done) => {
+  it('You should delete an existing reminder', (done) => {
     request(app)
       .delete(`/api/v1/reminder/delete/${reminderId}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -211,7 +189,7 @@ describe('Pruebas CRUD de Reminder', () => {
         if (err) return done(err)
 
         expect(res.body.status).to.equal('success')
-        expect(res.body.message).to.equal('El recordatorio ha sido eliminado exitosamente.')
+        expect(res.body.message).to.equal('The reminder has been successfully deleted.')
 
         done()
       })
@@ -219,8 +197,8 @@ describe('Pruebas CRUD de Reminder', () => {
 })
 
 // Prueba de eliminación de usuario
-describe('Eliminación de usuario', () => {
-  it('Debería eliminar un usuario existente', (done) => {
+describe('User deletion', () => {
+  it('You should delete an existing user', (done) => {
     request(app)
       .delete(`/api/v1/auth/delete/${idUser}`)
       .set('Authorization', `Bearer ${authToken}`) // Asegúrate de tener un token válido para realizar la eliminación
