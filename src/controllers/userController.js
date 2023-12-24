@@ -143,7 +143,7 @@ const loginUser = async (req, res) => {
  */
 
 const verifyEmail = async (req, res) => {
-  let data = null
+  // let data = null
 
   try {
     // Paso 1: Obtener el token criptográfico de los parámetros de la solicitud
@@ -171,11 +171,13 @@ const verifyEmail = async (req, res) => {
     )
 
     // Paso 6: Preparar los datos de respuesta con la información actualizada del usuario
-    data = {
-      email: userUpdated.email,
-      username: userUpdated.username,
-      verified: userUpdated.security.verified
-    }
+    // data = {
+    //   email: userUpdated.email,
+    //   username: userUpdated.username,
+    //   verified: userUpdated.security.verified
+    // }
+
+    console.log(`Redirecting with token: ${cryptoToken}`)
 
     // Paso 7: Redireccionar al usuario a la página adecuada
     if (userUpdated.security.verified === true) {

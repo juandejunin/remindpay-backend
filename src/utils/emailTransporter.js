@@ -14,7 +14,8 @@ const sendVerificationMail = async (user, host) => {
       from: process.env.EMAIL_ACCOUNT,
       to: user.email,
       subject: 'Account Verification Link',      
-      html: `<h3>Hello, ${user.username} Please, verify your email by clicking  <a href="http://${host}/api/auth/user/verify/${user.security?.cryptoToken}">here</a></h3> `
+      html: `<h3>Hello, ${user.username} Please, verify your email by clicking  <a href="http://${host}/api/v1/auth/user/verify/${user.security?.cryptoToken}">here</a>
+      `
     })
 
     return await Transporter.sendMail(mailOptions)
