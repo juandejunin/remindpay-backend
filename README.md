@@ -48,7 +48,7 @@ Si todo se ha configurado correctamente y el contenedor se ha iniciado sin probl
 
 ¡Listo! Ahora puedes acceder a la aplicación en <http://localhost:8000>.
 
-## Enpoints
+## Endpoints
 
 ### Registro(Register)
 
