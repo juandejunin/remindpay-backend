@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 const db = require('./database/db')
 const recordatorioPorCorreo = require('../src/utils/recordatorioPorCorreo')
 const { logger, LogEntry } = require('../logger/apiLogger')
-const userRoutes = require('./v1/routes/userRoutes')
+const { routerAuth } = require('./v1/routes/userRoutes')
 const reminderRoutes = require('./v1/routes/reminderRoutes')
 const unknownEndpoint = require('../src/middlewares/unknowEndpoint')
 const errorHandler = require('../src/middlewares/errorHandler')
@@ -38,7 +38,8 @@ app.get('/', (req, res) => {
 })
 
 // Rutas para usuarios y recordatorios
-app.use('/api/v1/auth', userRoutes)
+
+app.use('/api/v1/auth', routerAuth)
 app.use('/api/v1/reminder', reminderRoutes)
 
 // Middleware para manejar rutas desconocidas y errores

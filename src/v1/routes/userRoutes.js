@@ -244,9 +244,10 @@ const routerAuth = express.Router()
  *                   example: Server error
  */
 
+
 routerAuth.route('/register').post(registroValidator, registerUser)
 routerAuth.route('/login').post(loginValidator, loginUser)
 routerAuth.route('/user/verify/:cryptoToken').get(verifyEmail)
 routerAuth.delete('/delete/:id', check.auth, deleteUser)
 
-module.exports = routerAuth
+module.exports = { routerAuth }
