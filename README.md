@@ -57,7 +57,7 @@ Este endpoint permite a los usuarios registrarse en la aplicación proporcionand
 #### URL del Endpoint
 
 ```
-localhost:8000/api/auth/register
+localhost:8000/api/v1/auth/register
 ```
 
 #### Campos que recibe en formato json
@@ -69,17 +69,18 @@ localhost:8000/api/auth/register
     "password": "contra123"
 }
 ```
+#### Si el username o el email ya esta en uso
+
+```
+{"status":"error","data":null,"message":"Invalid Email/Username"}
+```
 
 #### Respuesta en caso de éxito
 
 ```
 {
-    "success": true,
-    "data": {
-        "msg": "Registered successfully. You must verify the account. Check your mail",
-        "id": "65054aef1c596b982d066470"
-    },
-    "errorMsg": null
+    "status": "success",
+    "message": "User created"
 }
 
 ```
@@ -91,7 +92,7 @@ Este endpoint permite a los usuarios iniciar sesión en el sistema. Es important
 #### URL del Endpoint
 
 ```
-localhost:8000/api/auth/login
+localhost:8000/api/v1/auth/login
 ```
 
 #### Campos que recibe en formato json
@@ -103,15 +104,45 @@ localhost:8000/api/auth/login
 }
 ```
 
+#### Si intentamos logearnos sin confirmar el email
+
+
+```
+{
+    "status": "error",
+    "message": "You must verify the account. Check your mail"
+}
+```
+
+### Si la contraseña es incorrecta
+
+
+```
+{
+    "status": "error",
+    "message": "You did not identify yourself correctly"
+}
+```
+
+#### Si el usuario es incorrecto
+
+```
+{
+    "status": "error",
+    "message": "User not found"
+}
+
+```
 #### Respuesta en caso de éxito
 
 ```
 {
-    "success": true,
-    "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTQ4NDcyNjcsImV4cCI6MTY5NDg5MDQ2N30.wQ5VrDNki8O-7DWDGnlt-o-MiK32_WH-GYxHXzHCdvE"
+    "status": "success",
+    "message": "login action",
+    "user": {
+        "id": "65a43438c3fbc5fe88b1d4c3"
     },
-    "errorMsg": null
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1YTQzNDM4YzNmYmM1ZmU4OGIxZDRjMyIsInVzZXJuYW1lIjoianVhbmNoaSIsImVtYWlsIjoianVhbmRlanVuaW43NUBnbWFpbC5jb20iLCJpYXQiOjE3MDUyNjA3MzgsImV4cCI6MTcwNTM0NzEzOH0.Z4AXgNoq2xka_TbiYwJkb8nd7D5JdZ-vOJEVFA9E1yg"
 }
 ```
 
