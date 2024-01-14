@@ -101,6 +101,12 @@ const loginUser = async (req, res) => {
         message: 'User not found'
       })
     }
+    if (!user.security.verified) {
+      return res.status(404).send({
+        status: 'error',
+        message: MSG_NO_VERIFICADO
+      })
+    }
 
     // Comprobar la contraseña
     const pwd = bcrypt.compareSync(params.password, user.password)
