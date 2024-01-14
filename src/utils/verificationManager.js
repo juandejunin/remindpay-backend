@@ -8,13 +8,16 @@ const initUserSeguridad = () => {
   return { verified, cryptoToken, restorePassword }
 }
 
-const verificarUser = (user) => {
+const verifyUser = (user) => {
+  const security = user.security || {}; // Si user.security es nulo o indefinido, establecer security como un objeto vacío
+
   return {
     verified: true,
     cryptoToken: null,
-    restorePassword: user.security?.restorePassword
+    restorePassword: security.restorePassword || false // Establecer restorePassword como false si security.restorePassword es nulo o indefinido
   }
 }
+
 
 const buildForgotPassword = (user) => {
   const cryptoToken = crypto.randomBytes(16).toString('hex')
@@ -34,4 +37,4 @@ const passwordReset = (user) => {
   }
 }
 
-module.exports = { initUserSeguridad, verificarUser, buildForgotPassword, passwordReset }
+module.exports = { initUserSeguridad, verifyUser, buildForgotPassword, passwordReset }
