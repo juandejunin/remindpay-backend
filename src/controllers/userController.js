@@ -2,7 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('../utils/jwt')
 const { validationResult } = require('express-validator')
-const { initUserSeguridad, verificarUser, buildForgotPassword, passwordReset } = require('../utils/verificationManager')
+const { initUserSeguridad, verifyUser, buildForgotPassword, passwordReset } = require('../utils/verificationManager')
 const { sendVerificationMail, sendForgotPasswordMail, sendChangedPasswordMail } = require('../utils/emailTransporter')
 const buildHostName = require('../utils/hostManager')
 
@@ -167,23 +167,20 @@ const verifyEmail = async (req, res) => {
     }
 
     // Paso 4: Realizar la verificación de la dirección de correo electrónico del usuario
-    userExists.security = verificarUser(userExists)
+    userExists.security = verifyUser(userExists)
 
-    // Paso 5: Actualizar la información del usuario en la base de datos
     const userUpdated = await User.findOneAndUpdate(
       { 'security.cryptoToken': cryptoToken }, // Condición de búsqueda
-      { $set: { 'security.verified': true } }, // Actualización
+      {
+        $set: {
+          'security.verified': true,
+          'security.cryptoToken': null
+        }
+      }, // Actualización
       { new: true } // Opciones para devolver el documento actualizado
     )
 
     // Paso 6: Preparar los datos de respuesta con la información actualizada del usuario
-    // data = {
-    //   email: userUpdated.email,
-    //   username: userUpdated.username,
-    //   verified: userUpdated.security.verified
-    // }
-
-    console.log(`Redirecting with token: ${cryptoToken}`)
 
     // Paso 7: Redireccionar al usuario a la página adecuada
     if (userUpdated.security.verified === true) {
