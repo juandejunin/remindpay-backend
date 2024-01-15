@@ -2,6 +2,8 @@ const request = require('supertest')
 const { describe, it } = require('mocha')
 const app = require('../src/index')
 const assert = require('assert')
+const User = require('../src/models/User')
+const nodemailerMock = require('nodemailer-mock');
 
 const chai = require('chai')
 const expect = chai.expect
@@ -10,23 +12,51 @@ let authToken // Para almacenar el token de autenticación
 describe('Registration and login tests', () => {
   // Prueba de registro de usuario
   describe('User register', () => {
-    it('You should register a new user successfully', (done) => {
+    it('You should register a new user successfully', async () => {
       const userData = {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123'
       }
 
-      request(app)
-        .post('/api/v1/auth/register')
-        .send(userData)
-        .expect(201)
-        .end((err, res) => {
-          if (err) return done(err)
-          assert(res.body.status === 'success')
-          assert(res.body.message === 'User created')
-          done()
-        })
+      try {
+        const res = await request(app)
+          .post('/api/v1/auth/register')
+          .send(userData)
+          .expect(201)
+
+          console.log('Response:', res.body);
+
+          expect(res.body.status).to.equal('success')
+          expect(res.body.message).to.equal('User created')
+
+        // Busca el usuario recién creado en la base de datos
+        const newUser = await User.findOne({ email: 'test@example.com' })
+        console.log(newUser)
+              // Obtén el token criptográfico del usuario
+      const cryptoToken = newUser.security?.cryptoToken;
+        // Simula la respuesta del usuario al hacer clic en el enlace de verificación de email
+        const verifyEmailRes = await request(app)
+          .get(`/api/v1/auth/user/verify/${cryptoToken}`)
+          .expect(302) // Código de redirección
+
+        // Verifica la redirección y ajusta según tu lógica específica
+        expect(verifyEmailRes.header.location).to.equal(process.env.URL_SIGNIN)
+
+        // También podrías realizar más aserciones según sea necesario
+
+        // Verifica que se haya enviado el correo electrónico de verificación
+        const sentMails = nodemailerMock.mock.getSentMail()
+        expect(sentMails.length).to.equal(1)
+        const email = sentMails[0]
+        // Agrega más aserciones según el contenido del correo electrónico si es necesario
+
+        // Restablece la configuración de nodemailer después de la prueba
+        nodemailerMock.mock.reset()
+      } catch (err) {
+        // Si hay algún error, la prueba fallará con el mensaje de error adecuado.
+        throw new Error(`Error during registration: ${err.message}`);
+      }
     })
 
     it('It should return an error if you try to register with the same email', (done) => {
