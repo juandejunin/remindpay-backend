@@ -25,15 +25,13 @@ describe('Registration and login tests', () => {
           .send(userData)
           .expect(201)
 
-          console.log('Response:', res.body);
-
-          expect(res.body.status).to.equal('success')
-          expect(res.body.message).to.equal('User created')
+          assert.strictEqual(res.body.status, "success")
+          assert.strictEqual(res.body.message, "User created")
+         // expect(res.body.message).to.equal("User created")
 
         // Busca el usuario recién creado en la base de datos
         const newUser = await User.findOne({ email: 'test@example.com' })
-        console.log(newUser)
-              // Obtén el token criptográfico del usuario
+        // Obtén el token criptográfico del usuario
       const cryptoToken = newUser.security?.cryptoToken;
         // Simula la respuesta del usuario al hacer clic en el enlace de verificación de email
         const verifyEmailRes = await request(app)
@@ -49,6 +47,7 @@ describe('Registration and login tests', () => {
         const sentMails = nodemailerMock.mock.getSentMail()
         expect(sentMails.length).to.equal(1)
         const email = sentMails[0]
+        console.log('este es el email:  ', email)
         // Agrega más aserciones según el contenido del correo electrónico si es necesario
 
         // Restablece la configuración de nodemailer después de la prueba
