@@ -1,11 +1,11 @@
 // Importar modulos
+const User = require('../models/User')
 const Reminder = require('../models/Reminder')
 const { validationResult } = require('express-validator')
 const { logger, LogEntry } = require('../../logger/apiLogger')
 
 // importar servicios
 
-// Guardar Reminder
 const createReminder = async (req, res) => {
   try {
     // Recoger datos del body
@@ -43,8 +43,22 @@ const createReminder = async (req, res) => {
       })
     }
 
-    // Devolver respuesta
+    // Actualizar el array 'reminder' del usuario
+    const user = await User.findByIdAndUpdate(
+      userRemind.id,
+      { $push: { reminder: reminderStored._id } },
+      { new: true }
+    )
 
+    // Comprobar si el usuario existe y si el array 'reminder' se ha actualizado correctamente
+    if (!user) {
+      return res.status(404).send({
+        status: 'error',
+        message: 'User not found'
+      })
+    }
+
+    // Devolver respuesta
     logger.info('Reminder created successfully')
     return res.status(200).send({
       status: 'success',

@@ -150,26 +150,48 @@ localhost:8000/api/v1/auth/login
 
 Para todos los endpoints CRUD de recordatorios, es necesario estar autenticados. Deberás incluir en la cabecera la clave "Authorization" y completar el campo con el token JWT obtenido en el inicio de sesión.
 
+#### Formato de la cabecera
+
+Al token obtenido en login se le antepone la palabre beaer 
+
+```
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1YTYxZDIyZGZmZDg2YWVhYmRkNDNmZCIsInVzZXJuYW1lIjoianVhbmNoaSIsImVtYWlsIjoianVhbmRlanVuaW43NUBnbWFpbC5jb20iLCJpYXQiOjE3MDUzODY1ODQsImV4cCI6MTcwNTQ3Mjk4NH0.fjtX-NxGo7VjvBFOdxhZcZi--3wVeCAldUTZA-x--K0
+```
 ### create reminder
 
 #### URL del Endpoint
 
 ```
-localhost:8000/api/reminder/create
+http://localhost:8000/api/v1/reminder/create
 ```
 
 #### Campos que recibe en formato json
 
 {
-    "remindername":"cablevision",
-    "price":"78888",
-    "date": "2024-09-23T10:30:22"
+    "remindername":"prueba2",
+    "price":"65123",
+    "date":"2024-09-23T10:30:22"
 }
 
 #### Respuesta en caso de éxito
 
 ```
-Recordatorio creado con exito
+{
+    "status": "success",
+    "message": "Reminder created successfully",
+    "reminder": {
+        "remindername": "prueba2",
+        "price": "65123",
+        "date": "2024-09-23T08:30:22.000Z",
+        "_id": "65a62881a0f59d2e65c3ba1a",
+        "created_at": "2024-01-16T06:56:01.814Z",
+        "user": "65a61d22dffd86aeabdd43fd",
+        "alarmDate7": "2024-09-16T08:30:22.000Z",
+        "alarmDate5": "2024-09-18T08:30:22.000Z",
+        "alarmDate1": "2024-09-22T08:30:22.000Z",
+        "__v": 0
+    }
+}
 ```
 
 
@@ -178,7 +200,7 @@ Recordatorio creado con exito
 #### URL del Endpoint
 
 ```
-localhost:8000/api/reminder/update/<id del recordatorio>
+localhost:8000/api/v1/reminder/update/<id del recordatorio>
 ```
 
 #### Campos que recibe en formato json
@@ -206,7 +228,7 @@ localhost:8000/api/reminder/update/<id del recordatorio>
 #### URL del Endpoint
 
 ```
-localhost:8000/api/reminder/read
+localhost:8000/api/v1/reminder/read
 ```
 
 #### Campos que recibe en formato json
@@ -264,7 +286,7 @@ localhost:8000/api/reminder/read
 #### URL del Endpoint
 
 ```
-localhost:8000/api/reminder/read/<id del recordatorio>
+localhost:8000/api/v1/reminder/read/<id del recordatorio>
 ```
 
 
@@ -291,7 +313,7 @@ localhost:8000/api/reminder/read/<id del recordatorio>
 #### URL del Endpoint
 
 ```
-localhost:8000/api/reminder/delete/<id del recordatorio>
+localhost:8000/api/v1/reminder/delete/<id del recordatorio>
 ```
 
 
