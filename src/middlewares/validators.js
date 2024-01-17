@@ -5,8 +5,22 @@ const registroValidator = [
 
   body('username').trim().not().isEmpty().withMessage('Username is required'),
 
-  body('email').trim().not().isEmpty().withMessage('Email is required')
-    .isEmail().normalizeEmail().withMessage('Invalid email'),
+  // body('email').trim().not().isEmpty().withMessage('Email is required')
+  //   .isEmail().normalizeEmail().withMessage('Invalid email'),
+
+  body('email')
+    .trim()
+    .not().isEmpty().withMessage('Email is required')
+    .isEmail().normalizeEmail()
+    .withMessage('Invalid email')
+    .custom((value, { req }) => {
+      // Validar el formato del correo electrónico usando una expresión regular
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(value)) {
+        throw new Error('Invalid email format')
+      }
+      return true
+    }),
 
   body('password').trim().not().isEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must have at least 6 characters')

@@ -12,7 +12,6 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-
 // Define la función para enviar el correo
 function enviarCorreo (username, email, remindername, price, date) {
   const correoOptions = {
