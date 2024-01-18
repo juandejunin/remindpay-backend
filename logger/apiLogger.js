@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 // const { LogEntry } = require('./logEntry')
 const MongoDB = require('winston-mongodb').MongoDB
 
-// Conecta a la base de datos MongoDB
+// Conectar a la base de datos MongoDB
 mongoose.connect(process.env.URL_MONGO)
   .then(() => {
     console.log('BBDD conectada')
@@ -14,9 +14,9 @@ mongoose.connect(process.env.URL_MONGO)
     console.error(err)
   })
 
-// Define un transporte personalizado para MongoDB
+// Definir un transporte personalizado para MongoDB
 const customMongoTransport = new MongoDB({
-  db: process.env.URL_MONGO, // Reemplaza esto con tu URL de MongoDB
+  db: process.env.URL_MONGO, // URL de MongoDB
   collection: 'logs', // Nombre de la colección donde se guardarán los logs
   options: {
     useUnifiedTopology: true
