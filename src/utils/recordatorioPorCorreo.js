@@ -56,8 +56,8 @@ async function recordatorioPorCorreo () {
     }
 
     // Programa una tarea periódica que ejecute la función cada día a las 3:00 AM
-    cron.schedule('* * * * *', async () => {
-      console.log('Ejecutando busqueda minuto a minuto')
+    cron.schedule('0 8  * * *', async () => {
+      console.log('Ejecutando busqueda')
       await getReminders()
     })
   } catch (err) {
