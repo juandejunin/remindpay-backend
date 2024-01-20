@@ -55,9 +55,13 @@ Si todo se ha configurado correctamente y el contenedor se ha iniciado sin probl
 Este endpoint permite a los usuarios registrarse en la aplicación proporcionando los siguientes campos: username, email y password. Es importante destacar que ninguno de estos campos puede estar vacío. Además, el registro no será exitoso si se proporciona un formato de email inválido o si el username o email ya está en uso en la aplicación.
 
 #### URL del Endpoint
-
+Local
 ```
 localhost:8000/api/v1/auth/register
+```
+Web
+```
+http://5.250.186.76/api/v1/auth/register
 ```
 
 #### Campos que recibe en formato json
@@ -90,9 +94,13 @@ localhost:8000/api/v1/auth/register
 Este endpoint permite a los usuarios iniciar sesión en el sistema. Es importante destacar que, previo a esto, se debe verificar la cuenta mediante el enlace que se envía al correo electrónico proporcionado durante el registro.
 
 #### URL del Endpoint
-
+Local
 ```
 localhost:8000/api/v1/auth/login
+```
+Web
+```
+http://5.250.186.76/api/v1/auth/login
 ```
 
 #### Campos que recibe en formato json
@@ -163,10 +171,12 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1YTYxZDIyZGZmZDg2YWVhYmRk
 
 ```
 http://localhost:8000/api/v1/reminder/create
-
-http://5.250.186.76/api/v1/auth/register
 ```
 
+Web
+```
+http://5.250.186.76/api/v1/reminder/create
+```
 #### Campos que recibe en formato json
 
 {
@@ -204,6 +214,10 @@ http://5.250.186.76/api/v1/auth/register
 ```
 localhost:8000/api/v1/reminder/update/<id del recordatorio>
 ```
+Web
+```
+http://5.250.186.76/api/v1/reminder/update/65ab91d3ea379e9c710390e8
+```
 
 #### Campos que recibe en formato json
 
@@ -231,6 +245,10 @@ localhost:8000/api/v1/reminder/update/<id del recordatorio>
 
 ```
 localhost:8000/api/v1/reminder/read
+```
+Web
+```
+http://5.250.186.76/api/v1/reminder/read
 ```
 
 #### Campos que recibe en formato json
@@ -291,6 +309,11 @@ localhost:8000/api/v1/reminder/read
 localhost:8000/api/v1/reminder/read/<id del recordatorio>
 ```
 
+Web
+```
+http://5.250.186.76/api/v1/reminder/read/65ab90f5ea379e9c710390d6
+```
+
 
 #### Respuesta en caso de éxito
 
@@ -313,9 +336,13 @@ localhost:8000/api/v1/reminder/read/<id del recordatorio>
 ### Delete reminder
 
 #### URL del Endpoint
-
+Local
 ```
 localhost:8000/api/v1/reminder/delete/<id del recordatorio>
+```
+Web
+```
+http://5.250.186.76/api/v1/reminder/delete/65ab91aeea379e9c710390e2
 ```
 
 
