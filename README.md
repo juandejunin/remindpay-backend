@@ -163,6 +163,8 @@ Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1YTYxZDIyZGZmZDg2YWVhYmRk
 
 ```
 http://localhost:8000/api/v1/reminder/create
+
+http://5.250.186.76/api/v1/auth/register
 ```
 
 #### Campos que recibe en formato json
