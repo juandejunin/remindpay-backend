@@ -2,7 +2,7 @@ const { createResponse } = require('../utils/responseGenerator')
 
 const unknownEndpoint = (request, response, next) => {
   // Verifica si la solicitud es para Swagger
-  if (request.url.startsWith('/api/v1/docs/')) {
+  if (request.url.startsWith('/api/v1/docs')) {
     // Si es una solicitud para Swagger, pasa al siguiente middleware (Swagger)
     next()
   } else {
