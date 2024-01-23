@@ -13,7 +13,7 @@ const { routerAuth } = require('./v1/routes/userRoutes')
 const reminderRoutes = require('./v1/routes/reminderRoutes')
 const unknownEndpoint = require('../src/middlewares/unknowEndpoint')
 const errorHandler = require('../src/middlewares/errorHandler')
-const { swaggerDocs: V1swaggerDocs } = require('./v1/swagger')
+const { swaggerDocs: V1swaggerDocs } = require('./v1/routes/swagger')
 
 const app = express()
 const port = process.env.PORT || 3000
